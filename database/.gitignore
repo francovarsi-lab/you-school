@@ -1,0 +1,4 @@
+# Database utilities
+# schema.sql: Safe to commit (no credentials)
+# setup.js: Safe to commit (reads credentials from directus-admin/.env at runtime)
+# .env or .env.local: NEVER commit (would expose database credentials)
