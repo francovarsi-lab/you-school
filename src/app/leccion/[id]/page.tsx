@@ -1,37 +1,38 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { resolveVideoReference } from '@/lib/video';
 
-interface LessonData {
-  id: string;
+interface Bloque {
+  orden: number;
+  tipo: string;
+  referencia: string;
+}
+
+interface Crumb {
+  nombre: string;
+  href: string;
+}
+
+interface LeccionData {
   titulo: string;
   slug: string;
-  contenido: string;
-  breadcrumb: {
-    pais: string;
-    curricula: string;
-    nivel: string;
-    anio: string;
-    materia: string;
-    unidad: string;
-    tema: string;
-  };
-  tema_id: string;
-  prevLessonId?: string;
-  nextLessonId?: string;
+  bloques: Bloque[];
+  crumbs: Crumb[];
+  temaNombre: string;
+  prevId?: string;
+  nextId?: string;
 }
 
 export default function LeccionPage() {
   const params = useParams();
-  const router = useRouter();
-  const [leccion, setLeccion] = useState<LessonData | null>(null);
+  const leccionId = params.id as string;
+  const [leccion, setLeccion] = useState<LeccionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const lessonId = params.id as string;
 
   useEffect(() => {
     const fetchLeccion = async () => {
@@ -39,50 +40,36 @@ export default function LeccionPage() {
         setLoading(true);
         setError(null);
 
-        // Fetch lesson with full curriculum chain and content
-        const { data, error: supabaseError } = await supabase
+        const { data, error: qError } = await supabase
           .from('ubicaciones_curriculares')
           .select(`
-            leccion_id,
             tema_id,
-            lecciones (
+            lecciones!inner (
               id,
               titulo,
               slug,
-              bloques_contenido (
-                referencia,
-                tipo
-              )
+              estado,
+              bloques_contenido ( orden, tipo, referencia )
             ),
             temas (
               id,
               nombre,
-              unidad_id,
               unidades (
                 id,
                 nombre,
-                materia_id,
                 materias (
                   id,
                   nombre,
-                  anio_id,
                   anios (
                     id,
                     nombre,
-                    nivel_id,
                     niveles (
                       id,
                       nombre,
-                      curricula_id,
                       curriculas (
                         id,
                         nombre,
-                        pais_id,
-                        paises (
-                          id,
-                          nombre,
-                          codigo
-                        )
+                        paises ( id, nombre )
                       )
                     )
                   )
@@ -90,23 +77,23 @@ export default function LeccionPage() {
               )
             )
           `)
-          .eq('leccion_id', lessonId)
+          .eq('leccion_id', leccionId)
+          .eq('estado', 'publicado')
           .eq('lecciones.estado', 'publicado')
-          .single();
+          .limit(1);
 
-        if (supabaseError) {
-          setError(`Error fetching data: ${supabaseError.message}`);
+        if (qError) {
+          setError(`Error al cargar la lección: ${qError.message}`);
+          return;
+        }
+        if (!data || data.length === 0) {
+          setError('Lección no encontrada o no publicada');
           return;
         }
 
-        if (!data) {
-          setError('Lesson not found');
-          return;
-        }
-
-        // Extract and structure the data
-        const lec = data.lecciones as any;
-        const tema = data.temas as any;
+        const row = data[0] as any;
+        const lec = row.lecciones;
+        const tema = row.temas;
         const unidad = tema.unidades;
         const materia = unidad.materias;
         const anio = materia.anios;
@@ -114,52 +101,46 @@ export default function LeccionPage() {
         const curricula = nivel.curriculas;
         const pais = curricula.paises;
 
-        const contenido = lec.bloques_contenido?.map((b: any) => b.referencia).join('\n\n') || 'No content found';
+        const base = `/estudiar/${pais.id}/${curricula.id}/${nivel.id}/${anio.id}/${materia.id}/${unidad.id}`;
+        const crumbs: Crumb[] = [
+          { nombre: pais.nombre, href: `/estudiar/${pais.id}` },
+          { nombre: curricula.nombre, href: `/estudiar/${pais.id}/${curricula.id}` },
+          { nombre: nivel.nombre, href: `/estudiar/${pais.id}/${curricula.id}/${nivel.id}` },
+          { nombre: anio.nombre, href: `/estudiar/${pais.id}/${curricula.id}/${nivel.id}/${anio.id}` },
+          { nombre: materia.nombre, href: `/estudiar/${pais.id}/${curricula.id}/${nivel.id}/${anio.id}/${materia.id}` },
+          { nombre: unidad.nombre, href: base },
+          { nombre: tema.nombre, href: `${base}/${tema.id}` },
+        ];
 
-        // Fetch prev and next lessons in the same topic
-        const { data: allLessons } = await supabase
+        const { data: hermanas } = await supabase
           .from('ubicaciones_curriculares')
-          .select('leccion_id, orden')
-          .eq('tema_id', data.tema_id)
+          .select('leccion_id, orden, lecciones!inner ( estado )')
+          .eq('tema_id', row.tema_id)
+          .eq('estado', 'publicado')
           .eq('lecciones.estado', 'publicado')
           .order('orden');
 
-        let prevLessonId: string | undefined;
-        let nextLessonId: string | undefined;
-
-        if (allLessons) {
-          const currentIdx = allLessons.findIndex(l => l.leccion_id === lessonId);
-          if (currentIdx > 0) prevLessonId = allLessons[currentIdx - 1].leccion_id;
-          if (currentIdx < allLessons.length - 1) nextLessonId = allLessons[currentIdx + 1].leccion_id;
-        }
+        const ids = (hermanas ?? []).map((h: any) => h.leccion_id as string);
+        const idx = ids.indexOf(leccionId);
 
         setLeccion({
-          id: lec.id,
           titulo: lec.titulo,
           slug: lec.slug,
-          contenido: contenido,
-          tema_id: data.tema_id,
-          breadcrumb: {
-            pais: pais.nombre,
-            curricula: curricula.nombre,
-            nivel: nivel.nombre,
-            anio: anio.nombre,
-            materia: materia.nombre,
-            unidad: unidad.nombre,
-            tema: tema.nombre,
-          },
-          prevLessonId,
-          nextLessonId,
+          bloques: [...(lec.bloques_contenido ?? [])].sort((a: Bloque, b: Bloque) => a.orden - b.orden),
+          crumbs,
+          temaNombre: tema.nombre,
+          prevId: idx > 0 ? ids[idx - 1] : undefined,
+          nextId: idx >= 0 && idx < ids.length - 1 ? ids[idx + 1] : undefined,
         });
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error occurred');
+        setError(err instanceof Error ? err.message : 'Error desconocido');
       } finally {
         setLoading(false);
       }
     };
 
     fetchLeccion();
-  }, [lessonId]);
+  }, [leccionId]);
 
   if (loading) {
     return (
@@ -169,13 +150,13 @@ export default function LeccionPage() {
     );
   }
 
-  if (error) {
+  if (error || !leccion) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
         <div className="max-w-md w-full p-8 bg-red-50 border-2 border-red-400 rounded-lg">
-          <h1 className="text-2xl font-bold text-red-800 mb-4">Error</h1>
-          <p className="text-red-700 mb-4">{error}</p>
-          <Link href="/estudiar" className="text-blue-600 hover:underline">
+          <h1 className="text-2xl font-bold text-red-900 mb-4">Error</h1>
+          <p className="text-red-800 mb-4">{error ?? 'Sin datos'}</p>
+          <Link href="/estudiar" className="text-blue-800 underline">
             Volver a Estudiar
           </Link>
         </div>
@@ -183,80 +164,88 @@ export default function LeccionPage() {
     );
   }
 
-  if (!leccion) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-xl font-semibold text-gray-700">No lesson data available</p>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex flex-wrap gap-2 text-sm text-gray-600">
+        <nav aria-label="Ubicación curricular" className="mb-8">
+          <ol className="flex flex-wrap gap-x-2 gap-y-1 text-sm text-gray-700">
             <li>
-              <Link href="/estudiar" className="text-blue-600 hover:underline">
+              <Link href="/estudiar" className="text-blue-800 underline hover:text-blue-900">
                 Inicio
               </Link>
             </li>
-            <li>&gt;</li>
-            <li>{leccion.breadcrumb.pais}</li>
-            <li>&gt;</li>
-            <li>{leccion.breadcrumb.curricula}</li>
-            <li>&gt;</li>
-            <li>{leccion.breadcrumb.nivel}</li>
-            <li>&gt;</li>
-            <li>{leccion.breadcrumb.anio}</li>
-            <li>&gt;</li>
-            <li>{leccion.breadcrumb.materia}</li>
-            <li>&gt;</li>
-            <li>{leccion.breadcrumb.unidad}</li>
-            <li>&gt;</li>
-            <li className="font-semibold text-gray-900">{leccion.breadcrumb.tema}</li>
+            {leccion.crumbs.map((c, i) => (
+              <li key={c.href} className="flex gap-x-2">
+                <span aria-hidden="true">&gt;</span>
+                {i === leccion.crumbs.length - 1 ? (
+                  <span className="font-semibold text-gray-900" aria-current="page">{c.nombre}</span>
+                ) : (
+                  <Link href={c.href} className="text-blue-800 underline hover:text-blue-900">
+                    {c.nombre}
+                  </Link>
+                )}
+              </li>
+            ))}
           </ol>
         </nav>
 
-        {/* Main Content */}
-        <article className="bg-white rounded-lg shadow-lg p-8 mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">{leccion.titulo}</h1>
+        <article className="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{leccion.titulo}</h1>
 
-          <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed whitespace-pre-wrap">
-            {leccion.contenido}
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              Slug: <code className="text-xs bg-gray-100 px-2 py-1 rounded">{leccion.slug}</code>
-            </p>
+          <div className="space-y-6">
+            {leccion.bloques.map((b, i) => {
+              if (b.tipo === 'video') {
+                const embed = resolveVideoReference(b.referencia);
+                if (!embed.ok) {
+                  return (
+                    <div key={i} className="p-4 bg-amber-50 border border-amber-400 rounded text-amber-900">
+                      No se puede mostrar el video: {embed.error}
+                    </div>
+                  );
+                }
+                return (
+                  <div key={i} className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+                    <iframe
+                      className="absolute inset-0 w-full h-full"
+                      src={embed.src}
+                      title={`Video: ${leccion.titulo}`}
+                      loading="lazy"
+                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                  </div>
+                );
+              }
+              return (
+                <p key={i} className="text-lg leading-relaxed text-gray-800 whitespace-pre-wrap">
+                  {b.referencia}
+                </p>
+              );
+            })}
+            {leccion.bloques.length === 0 && (
+              <p className="text-gray-700">Esta lección todavía no tiene contenido.</p>
+            )}
           </div>
         </article>
 
-        {/* Navigation */}
         <div className="flex gap-4 justify-between">
-          {leccion.prevLessonId ? (
-            <button
-              onClick={() => router.push(`/leccion/${leccion.prevLessonId}`)}
-              className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
+          {leccion.prevId ? (
+            <Link
+              href={`/leccion/${leccion.prevId}`}
+              className="px-6 py-3 bg-gray-200 text-gray-900 font-semibold rounded-lg hover:bg-gray-300"
             >
               ← Anterior
-            </button>
-          ) : (
-            <div />
-          )}
-
-          {leccion.nextLessonId ? (
-            <button
-              onClick={() => router.push(`/leccion/${leccion.nextLessonId}`)}
-              className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            </Link>
+          ) : <span />}
+          {leccion.nextId ? (
+            <Link
+              href={`/leccion/${leccion.nextId}`}
+              className="px-6 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800"
             >
               Siguiente →
-            </button>
-          ) : (
-            <div />
-          )}
+            </Link>
+          ) : <span />}
         </div>
       </div>
     </div>
