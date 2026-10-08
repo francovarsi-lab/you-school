@@ -6,9 +6,8 @@ import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 
 interface BreadcrumbItem {
-  id: string;
   nombre: string;
-  level: string;
+  depth: number;
 }
 
 interface ListItem {
@@ -16,6 +15,9 @@ interface ListItem {
   nombre: string;
   type: 'pais' | 'curricula' | 'nivel' | 'anio' | 'materia' | 'unidad' | 'tema' | 'leccion';
 }
+
+const linkClass =
+  'rounded-sm text-blue-800 no-underline hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700';
 
 export default function EstudiarPage() {
   const params = useParams();
@@ -61,7 +63,7 @@ export default function EstudiarPage() {
             .select('id, nombre')
             .eq('id', slug[0])
             .single();
-          if (pais) breadcrumbData.push({ id: pais.id, nombre: pais.nombre, level: 'pais' });
+          if (pais) breadcrumbData.push({ nombre: pais.nombre, depth: 1 });
         }
 
         // Level 1: list curriculas for country
@@ -85,7 +87,7 @@ export default function EstudiarPage() {
             .select('id, nombre')
             .eq('id', slug[1])
             .single();
-          if (curricula) breadcrumbData.push({ id: curricula.id, nombre: curricula.nombre, level: 'curricula' });
+          if (curricula) breadcrumbData.push({ nombre: curricula.nombre, depth: 2 });
         }
 
         // Level 2: list levels
@@ -109,7 +111,7 @@ export default function EstudiarPage() {
             .select('id, nombre')
             .eq('id', slug[2])
             .single();
-          if (nivel) breadcrumbData.push({ id: nivel.id, nombre: nivel.nombre, level: 'nivel' });
+          if (nivel) breadcrumbData.push({ nombre: nivel.nombre, depth: 3 });
         }
 
         // Level 3: list years
@@ -133,7 +135,7 @@ export default function EstudiarPage() {
             .select('id, nombre')
             .eq('id', slug[3])
             .single();
-          if (anio) breadcrumbData.push({ id: anio.id, nombre: anio.nombre, level: 'anio' });
+          if (anio) breadcrumbData.push({ nombre: anio.nombre, depth: 4 });
         }
 
         // Level 4: list subjects
@@ -157,7 +159,7 @@ export default function EstudiarPage() {
             .select('id, nombre')
             .eq('id', slug[4])
             .single();
-          if (materia) breadcrumbData.push({ id: materia.id, nombre: materia.nombre, level: 'materia' });
+          if (materia) breadcrumbData.push({ nombre: materia.nombre, depth: 5 });
         }
 
         // Level 5: list units
@@ -181,7 +183,7 @@ export default function EstudiarPage() {
             .select('id, nombre')
             .eq('id', slug[5])
             .single();
-          if (unidad) breadcrumbData.push({ id: unidad.id, nombre: unidad.nombre, level: 'unidad' });
+          if (unidad) breadcrumbData.push({ nombre: unidad.nombre, depth: 6 });
         }
 
         // Level 6: list topics
@@ -205,7 +207,7 @@ export default function EstudiarPage() {
             .select('id, nombre')
             .eq('id', slug[6])
             .single();
-          if (tema) breadcrumbData.push({ id: tema.id, nombre: tema.nombre, level: 'tema' });
+          if (tema) breadcrumbData.push({ nombre: tema.nombre, depth: 7 });
         }
 
         // Level 7: list lessons for this topic
@@ -275,16 +277,18 @@ export default function EstudiarPage() {
         {/* Breadcrumb */}
         {breadcrumb.length > 0 && (
           <nav className="mb-8">
-            <ol className="flex flex-wrap gap-2 text-sm text-gray-600">
+            <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-700">
               <li>
-                <Link href="/estudiar" className="text-blue-600 hover:underline">
+                <Link href="/" className={linkClass}>
                   Inicio
                 </Link>
               </li>
-              {breadcrumb.map((item, idx) => (
-                <li key={idx}>
-                  <span className="mx-2">&gt;</span>
-                  <span>{item.nombre}</span>
+              {breadcrumb.map((item) => (
+                <li key={item.depth} className="flex items-center gap-x-2">
+                  <span aria-hidden="true">&gt;</span>
+                  <Link href={`/estudiar/${slug.slice(0, item.depth).join('/')}`} className={linkClass}>
+                    {item.nombre}
+                  </Link>
                 </li>
               ))}
             </ol>
