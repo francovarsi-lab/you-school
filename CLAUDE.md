@@ -16,7 +16,7 @@ Dónde vive cada cosa:
 - Frontend: Next.js en Vercel. Rutas públicas: `/`, `/estudiar`, `/aprender`, `/leccion/[id]`.
 - Datos: Supabase/Postgres. Esquema y migraciones en `database/` (`schema.sql`, `migrations/`).
 - Admin: Directus en Docker, carpeta `directus-admin/`, puerto 8055. Credenciales en `directus-admin/.env` (no versionado).
-- Video: se guarda como referencia abstracta `youtube:ID` en `bloques_contenido`. Solo `src/lib/video.ts` sabe de YouTube.
+- Video: se guarda como referencia abstracta en `bloques_contenido.referencia`. Formatos: `youtube:ID` (iframe) y `educar:URL` (MP4 de educ.ar, solo host `educar.arsat.com.ar`, reproductor nativo). Solo `src/lib/video.ts` conoce los proveedores.
 - Keepalive: `src/app/api/keepalive/route.ts` + cron diario en `vercel.json`, para que Supabase free no se pause.
 
 Reglas:
@@ -37,7 +37,8 @@ Lo aprendido (gotchas):
 - Directus cachea el esquema: después de cambios de metadatos o de FKs hay que reiniciar el contenedor.
 
 Estado y pendientes:
-- Contenido de prueba: Argentina > NAP Argentina > Primaria > 4to grado > Matemática > Números > Fracciones, con dos lecciones (una de texto y una con video de YouTube).
-- Pendiente de confirmar en Vercel: despliegue automático desde master, variables de entorno y el cron de keepalive.
-- Pendiente de confirmar en Directus: el selector de Conocimientos y Etiquetas en el formulario de la lección.
+- Confirmado: despliegue en Vercel desde master, variables de entorno, cron de keepalive y selector de Conocimientos en Directus.
+- Contenido: Argentina > NAP Argentina > Primaria (7 años con sus áreas) > 4to grado > Matemática > Números > Fracciones, con 4 lecciones en orden: 1 y 2 de prueba (una de texto, "TIPOS DE FRACCIONES", con video de YouTube de un tercero), 3 y 4 de educ.ar (CC BY-NC-SA, MP4 del reproductor de educ.ar).
+- Pendiente: el diseño de /estudiar al llegar a un tema lo revisa el usuario.
+- Pendiente: la lección de Daniel Carreón es de un tercero y es contenido de prueba.
 - Directus solo corre mientras la PC y Docker estén encendidos. Las lecciones públicas no dependen de Directus: se leen de Supabase.

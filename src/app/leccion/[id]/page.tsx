@@ -17,9 +17,16 @@ interface Crumb {
   href: string;
 }
 
+interface Fuente {
+  nombre: string;
+  url: string | null;
+  licencia: string | null;
+}
+
 interface LeccionData {
   titulo: string;
   slug: string;
+  fuente: Fuente | null;
   bloques: Bloque[];
   crumbs: Crumb[];
   temaNombre: string;
@@ -49,7 +56,8 @@ export default function LeccionPage() {
               titulo,
               slug,
               estado,
-              bloques_contenido ( orden, tipo, referencia )
+              bloques_contenido ( orden, tipo, referencia ),
+              fuentes ( nombre, url, licencia )
             ),
             temas (
               id,
@@ -126,6 +134,7 @@ export default function LeccionPage() {
         setLeccion({
           titulo: lec.titulo,
           slug: lec.slug,
+          fuente: lec.fuentes ?? null,
           bloques: [...(lec.bloques_contenido ?? [])].sort((a: Bloque, b: Bloque) => a.orden - b.orden),
           crumbs,
           temaNombre: tema.nombre,
@@ -203,6 +212,20 @@ export default function LeccionPage() {
                     </div>
                   );
                 }
+                if (embed.kind === 'file') {
+                  return (
+                    <video
+                      key={i}
+                      className="w-full rounded-lg bg-black"
+                      controls
+                      preload="metadata"
+                      src={embed.src}
+                      aria-label={`Video: ${leccion.titulo}`}
+                    >
+                      Tu navegador no puede reproducir este video.
+                    </video>
+                  );
+                }
                 return (
                   <div key={i} className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
                     <iframe
@@ -227,6 +250,25 @@ export default function LeccionPage() {
               <p className="text-gray-700">Esta lección todavía no tiene contenido.</p>
             )}
           </div>
+
+          {leccion.fuente && (
+            <p className="mt-6 pt-4 border-t border-gray-300 text-sm text-gray-800">
+              Fuente:{' '}
+              {leccion.fuente.url ? (
+                <a
+                  href={leccion.fuente.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
+                >
+                  {leccion.fuente.nombre}
+                </a>
+              ) : (
+                leccion.fuente.nombre
+              )}
+              {leccion.fuente.licencia && <>. Licencia: {leccion.fuente.licencia}</>}
+            </p>
+          )}
         </article>
 
         <div className="flex gap-4 justify-between">
