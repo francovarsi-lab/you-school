@@ -31,6 +31,19 @@ const contarNivel = (n: Nivel) => sumar(n.anios.map(contarAnio));
 const contarCurricula = (c: Curricula) => sumar(c.niveles.map(contarNivel));
 const contarPais = (p: Pais) => sumar(p.curriculas.map(contarCurricula));
 
+const hijosDe = (n: any): any[] => n.curriculas ?? n.niveles ?? n.anios ?? n.materias ?? n.unidades ?? n.temas ?? [];
+
+// Ids desde la raíz hasta el nodo pedido (para abrir ese camino en el índice).
+function caminoHacia(nodos: any[], id: string, ancestros: string[] = []): string[] | null {
+  for (const n of nodos) {
+    const camino = [...ancestros, n.id];
+    if (n.id === id) return camino;
+    const r = caminoHacia(hijosDe(n), id, camino);
+    if (r) return r;
+  }
+  return null;
+}
+
 // Índice completo en un solo pedido. Cuando la currícula crezca, este árbol
 // tiene que cargarse por niveles (como NavegadorClient), no entero.
 async function cargarIndice(): Promise<Pais[]> {
@@ -81,10 +94,10 @@ async function cargarIndice(): Promise<Pais[]> {
   }));
 }
 
-function Nodo({ titulo, count, nivel, children }: { titulo: string; count: number; nivel: number; children: React.ReactNode }) {
+function Nodo({ id, titulo, count, nivel, abiertos, children }: { id: string; titulo: string; count: number; nivel: number; abiertos: Set<string>; children: React.ReactNode }) {
   const vacio = count === 0;
   return (
-    <details className="mt-2 border-l-2 border-gray-300 pl-3">
+    <details open={abiertos.has(id)} className="mt-2 border-l-2 border-gray-300 pl-3">
       <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-md py-2 pr-2 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
         <span className={`font-semibold ${vacio ? 'text-gray-600' : 'text-gray-900'} ${nivel === 0 ? 'text-xl' : 'text-base'}`}>
           {titulo}
@@ -98,27 +111,27 @@ function Nodo({ titulo, count, nivel, children }: { titulo: string; count: numbe
   );
 }
 
-function IndiceCompleto({ paises }: { paises: Pais[] }) {
+function IndiceCompleto({ paises, abiertos }: { paises: Pais[]; abiertos: Set<string> }) {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Currícula</h1>
         {paises.map((p) => (
-          <Nodo key={p.id} titulo={p.nombre} count={contarPais(p)} nivel={0}>
+          <Nodo key={p.id} id={p.id} titulo={p.nombre} count={contarPais(p)} nivel={0} abiertos={abiertos}>
             {p.curriculas.map((c) => (
-              <Nodo key={c.id} titulo={c.nombre} count={contarCurricula(c)} nivel={1}>
+              <Nodo key={c.id} id={c.id} titulo={c.nombre} count={contarCurricula(c)} nivel={1} abiertos={abiertos}>
                 {c.niveles.map((n) => (
-                  <Nodo key={n.id} titulo={n.nombre} count={contarNivel(n)} nivel={2}>
+                  <Nodo key={n.id} id={n.id} titulo={n.nombre} count={contarNivel(n)} nivel={2} abiertos={abiertos}>
                     {n.anios.map((a) => (
-                      <Nodo key={a.id} titulo={a.nombre} count={contarAnio(a)} nivel={3}>
+                      <Nodo key={a.id} id={a.id} titulo={a.nombre} count={contarAnio(a)} nivel={3} abiertos={abiertos}>
                         {a.materias.map((m) => (
-                          <Nodo key={m.id} titulo={m.nombre} count={contarMateria(m)} nivel={4}>
+                          <Nodo key={m.id} id={m.id} titulo={m.nombre} count={contarMateria(m)} nivel={4} abiertos={abiertos}>
                             {m.unidades.map((u) => (
-                              <Nodo key={u.id} titulo={u.nombre} count={contarUnidad(u)} nivel={5}>
+                              <Nodo key={u.id} id={u.id} titulo={u.nombre} count={contarUnidad(u)} nivel={5} abiertos={abiertos}>
                                 {u.temas.map((t) => {
                                   const lecciones = leccionesDe(t);
                                   return (
-                                    <Nodo key={t.id} titulo={t.nombre} count={lecciones.length} nivel={6}>
+                                    <Nodo key={t.id} id={t.id} titulo={t.nombre} count={lecciones.length} nivel={6} abiertos={abiertos}>
                                       <ul className="space-y-1">
                                         {lecciones.map((l) => (
                                           <li key={l.id}>
@@ -152,11 +165,19 @@ function IndiceCompleto({ paises }: { paises: Pais[] }) {
   );
 }
 
-export default async function EstudiarPage({ params }: { params: Promise<{ slug?: string[] }> }) {
+export default async function EstudiarPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug?: string[] }>;
+  searchParams: Promise<{ abrir?: string }>;
+}) {
   const { slug } = await params;
   if (slug && slug.length > 0) {
     return <NavegadorClient slug={slug} />;
   }
+  const { abrir } = await searchParams;
   const paises = await cargarIndice();
-  return <IndiceCompleto paises={paises} />;
+  const camino = abrir ? caminoHacia(paises, abrir) : null;
+  return <IndiceCompleto paises={paises} abiertos={new Set(camino ?? [])} />;
 }

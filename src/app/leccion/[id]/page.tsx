@@ -27,11 +27,48 @@ interface LeccionData {
   titulo: string;
   slug: string;
   fuente: Fuente | null;
+  urlOrigen: string | null;
   bloques: Bloque[];
   crumbs: Crumb[];
   temaNombre: string;
   prevId?: string;
   nextId?: string;
+}
+
+function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; origen: string | null }) {
+  const [fallo, setFallo] = useState(false);
+
+  if (fallo) {
+    return (
+      <div className="p-4 bg-gray-100 border border-gray-400 rounded-lg text-gray-900">
+        <p>No se pudo cargar el video.</p>
+        {origen && (
+          <a
+            href={origen}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mt-2 text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
+          >
+            Ver en Educ.ar
+          </a>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <video
+      className="w-full rounded-lg bg-black"
+      controls
+      preload="metadata"
+      playsInline
+      src={src}
+      aria-label={`Video: ${titulo}`}
+      onError={() => setFallo(true)}
+    >
+      Tu navegador no puede reproducir este video.
+    </video>
+  );
 }
 
 export default function LeccionPage() {
@@ -57,6 +94,7 @@ export default function LeccionPage() {
               slug,
               estado,
               bloques_contenido ( orden, tipo, referencia ),
+              url_origen,
               fuentes ( nombre, url, licencia )
             ),
             temas (
@@ -109,15 +147,14 @@ export default function LeccionPage() {
         const curricula = nivel.curriculas;
         const pais = curricula.paises;
 
-        const base = `/estudiar/${pais.id}/${curricula.id}/${nivel.id}/${anio.id}/${materia.id}/${unidad.id}`;
         const crumbs: Crumb[] = [
-          { nombre: pais.nombre, href: `/estudiar/${pais.id}` },
-          { nombre: curricula.nombre, href: `/estudiar/${pais.id}/${curricula.id}` },
-          { nombre: nivel.nombre, href: `/estudiar/${pais.id}/${curricula.id}/${nivel.id}` },
-          { nombre: anio.nombre, href: `/estudiar/${pais.id}/${curricula.id}/${nivel.id}/${anio.id}` },
-          { nombre: materia.nombre, href: `/estudiar/${pais.id}/${curricula.id}/${nivel.id}/${anio.id}/${materia.id}` },
-          { nombre: unidad.nombre, href: base },
-          { nombre: tema.nombre, href: `${base}/${tema.id}` },
+          { nombre: pais.nombre, href: `/estudiar?abrir=${pais.id}` },
+          { nombre: curricula.nombre, href: `/estudiar?abrir=${curricula.id}` },
+          { nombre: nivel.nombre, href: `/estudiar?abrir=${nivel.id}` },
+          { nombre: anio.nombre, href: `/estudiar?abrir=${anio.id}` },
+          { nombre: materia.nombre, href: `/estudiar?abrir=${materia.id}` },
+          { nombre: unidad.nombre, href: `/estudiar?abrir=${unidad.id}` },
+          { nombre: tema.nombre, href: `/estudiar?abrir=${tema.id}` },
         ];
 
         const { data: hermanas } = await supabase
@@ -135,6 +172,7 @@ export default function LeccionPage() {
           titulo: lec.titulo,
           slug: lec.slug,
           fuente: lec.fuentes ?? null,
+          urlOrigen: lec.url_origen ?? null,
           bloques: [...(lec.bloques_contenido ?? [])].sort((a: Bloque, b: Bloque) => a.orden - b.orden),
           crumbs,
           temaNombre: tema.nombre,
@@ -172,6 +210,8 @@ export default function LeccionPage() {
       </div>
     );
   }
+
+  const origen = leccion.urlOrigen ?? leccion.fuente?.url ?? null;
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -213,18 +253,7 @@ export default function LeccionPage() {
                   );
                 }
                 if (embed.kind === 'file') {
-                  return (
-                    <video
-                      key={i}
-                      className="w-full rounded-lg bg-black"
-                      controls
-                      preload="metadata"
-                      src={embed.src}
-                      aria-label={`Video: ${leccion.titulo}`}
-                    >
-                      Tu navegador no puede reproducir este video.
-                    </video>
-                  );
+                  return <VideoArchivo key={i} src={embed.src} titulo={leccion.titulo} origen={origen} />;
                 }
                 return (
                   <div key={i} className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
@@ -254,9 +283,9 @@ export default function LeccionPage() {
           {leccion.fuente && (
             <p className="mt-6 pt-4 border-t border-gray-300 text-sm text-gray-800">
               Fuente:{' '}
-              {leccion.fuente.url ? (
+              {origen ? (
                 <a
-                  href={leccion.fuente.url}
+                  href={origen}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
