@@ -85,8 +85,8 @@ async function cargarIndice(): Promise<Pais[]> {
             ...m,
             unidades: ordenar(m.unidades).map((u) => ({
               ...u,
-              temas: ordenar(u.temas),
-            })),
+              temas: ordenar(u.temas).filter((t) => leccionesDe(t).length > 0),
+            })).filter((u) => contarUnidad(u) > 0),
           })),
         })),
       })),
