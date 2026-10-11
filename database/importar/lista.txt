@@ -1,0 +1,5 @@
+# URL_ficha | Año | Materia | Unidad | Tema | Conocimiento
+https://www.educ.ar/recursos/155961/la-pizza-y-sus-porciones | 4to grado | Matemática | Números | Fracciones | Fracciones
+https://www.educ.ar/recursos/155962/las-porciones-de-pizza-y-sus-equivalencias | 4to grado | Matemática | Números | Fracciones | Fracciones
+https://www.example.com/video | 4to grado | Matemática | Números | Fracciones | Fracciones
+https://www.educ.ar/recursos/155964/cuantas-partes-tiene-una-pizza | 4to grado | Matemática | Números | Fracciones | Fracciones
