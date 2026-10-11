@@ -1,5 +1,55 @@
-# URL_ficha | Año | Materia | Unidad | Tema | Conocimiento
-https://www.educ.ar/recursos/155961/la-pizza-y-sus-porciones | 4to grado | Matemática | Números | Fracciones | Fracciones
-https://www.educ.ar/recursos/155962/las-porciones-de-pizza-y-sus-equivalencias | 4to grado | Matemática | Números | Fracciones | Fracciones
-https://www.example.com/video | 4to grado | Matemática | Números | Fracciones | Fracciones
-https://www.educ.ar/recursos/155964/cuantas-partes-tiene-una-pizza | 4to grado | Matemática | Números | Fracciones | Fracciones
+# FORMATO: URL | Año | Materia | Unidad | Tema | Conocimiento
+# La ubicación por grado es una PROPUESTA: Educ.ar solo indica ciclo.
+# Ya cargadas (no tocar):
+# https://www.educ.ar/recursos/155961/la-pizza-y-sus-porciones | 4to grado | Matemática | Números | Fracciones | Fracciones
+# https://www.educ.ar/recursos/155962/las-porciones-de-pizza-y-sus-equivalencias | 4to grado | Matemática | Números | Fracciones | Fracciones
+
+# Matemática, 4to grado (Segundo Ciclo)
+https://www.educ.ar/recursos/155979 | 4to grado | Matemática | Por clasificar | Multiplicación | Multiplicación
+https://www.educ.ar/recursos/155971 | 4to grado | Matemática | Por clasificar | Proporcionalidad | Proporcionalidad
+https://www.educ.ar/recursos/127996 | 4to grado | Matemática | Por clasificar | Perímetro y área | Perímetro y área
+https://www.educ.ar/recursos/127784 | 4to grado | Matemática | Por clasificar | Triángulos | Triángulos
+
+# Matemática, 1er grado (Primer Ciclo)
+https://www.educ.ar/recursos/155634 | 1er grado | Matemática | Por clasificar | Medidas y recetas | Situaciones problemáticas
+https://www.educ.ar/recursos/155636 | 1er grado | Matemática | Por clasificar | Medidas y recetas | Situaciones problemáticas
+
+# Ciencias Naturales, 4to grado
+https://www.educ.ar/recursos/156780 | 4to grado | Ciencias Naturales | Por clasificar | El agua | Ciclo del agua
+https://www.educ.ar/recursos/156784 | 4to grado | Ciencias Naturales | Por clasificar | El agua | Ciclo del agua
+https://www.educ.ar/recursos/156781 | 4to grado | Ciencias Naturales | Por clasificar | Experimentos | Experimentos científicos
+https://www.educ.ar/recursos/156269 | 4to grado | Ciencias Naturales | Por clasificar | Método científico | Método científico
+https://www.educ.ar/recursos/157241 | 4to grado | Ciencias Naturales | Por clasificar | Animales | Migración de las aves
+
+# Ciencias Naturales, 1er grado
+https://www.educ.ar/recursos/155604 | 1er grado | Ciencias Naturales | Por clasificar | Luz y sombras | Sombras
+https://www.educ.ar/recursos/156545 | 1er grado | Ciencias Naturales | Por clasificar | Fósiles y dinosaurios | Fósiles
+
+# Ciencias Sociales, 4to grado
+https://www.educ.ar/recursos/156792 | 4to grado | Ciencias Sociales | Por clasificar | Geografía de la Argentina | Cursos de agua de la Argentina
+https://www.educ.ar/recursos/155951 | 4to grado | Ciencias Sociales | Por clasificar | Alimentación e historia | Historia de la alimentación
+
+# Ciencias Sociales, 1er grado
+https://www.educ.ar/recursos/157361 | 1er grado | Ciencias Sociales | Por clasificar | Mi familia | La familia
+https://www.educ.ar/recursos/157358 | 1er grado | Ciencias Sociales | Por clasificar | Mi familia | La familia
+https://www.educ.ar/recursos/157366 | 1er grado | Ciencias Sociales | Por clasificar | Mi familia | La familia
+https://www.educ.ar/recursos/156973 | 1er grado | Ciencias Sociales | Por clasificar | Transporte | Medios de transporte
+
+# Ciencias Sociales, 3er grado (inmigración, ubicación aproximada)
+https://www.educ.ar/recursos/155798 | 3er grado | Ciencias Sociales | Por clasificar | Inmigración | Inmigración
+https://www.educ.ar/recursos/155796 | 3er grado | Ciencias Sociales | Por clasificar | Inmigración | Inmigración
+https://www.educ.ar/recursos/155752 | 3er grado | Ciencias Sociales | Por clasificar | Inmigración | Inmigración
+https://www.educ.ar/recursos/155751 | 3er grado | Ciencias Sociales | Por clasificar | Inmigración | Inmigración
+https://www.educ.ar/recursos/155812 | 3er grado | Ciencias Sociales | Por clasificar | Inmigración | Inmigración
+
+# Lengua, 4to grado
+https://www.educ.ar/recursos/156984 | 4to grado | Lengua | Por clasificar | Lectura de cuentos | Lectura de cuentos
+https://www.educ.ar/recursos/157011 | 4to grado | Lengua | Por clasificar | Lectura de cuentos | Lectura de cuentos
+https://www.educ.ar/recursos/157009 | 4to grado | Lengua | Por clasificar | Lectura de cuentos | Lectura de cuentos
+https://www.educ.ar/recursos/155963 | 4to grado | Lengua | Por clasificar | Lectura de cuentos | Lectura de cuentos
+https://www.educ.ar/recursos/157012 | 4to grado | Lengua | Por clasificar | Historieta | Historieta
+https://www.educ.ar/recursos/157006 | 4to grado | Lengua | Por clasificar | Lectura de imágenes | Lectura de imágenes
+
+# Lengua, 1er grado
+https://www.educ.ar/recursos/155648 | 1er grado | Lengua | Por clasificar | Lectura de cuentos | Lectura de cuentos
+https://www.educ.ar/recursos/157357 | 1er grado | Lengua | Por clasificar | Lectura de cuentos | Lectura de cuentos
