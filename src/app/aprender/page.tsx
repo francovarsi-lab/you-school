@@ -81,6 +81,22 @@ export default function AprenderPage() {
           }
         }
 
+        const { data: conocData } = await supabase
+          .from('lecciones_conocimientos')
+          .select(`
+            leccion_id,
+            conocimientos!inner ( nombre ),
+            lecciones!inner ( id, titulo, estado )
+          `)
+          .ilike('conocimientos.nombre', query)
+          .eq('lecciones.estado', 'publicado') as any;
+
+        if (conocData) {
+          for (const lc of conocData) {
+            lessonSet.set(lc.leccion_id, { leccion_id: lc.leccion_id, titulo: lc.lecciones.titulo });
+          }
+        }
+
         // Fetch ubicaciones for breadcrumbs
         const lectureIds = Array.from(lessonSet.keys());
         if (lectureIds.length > 0) {

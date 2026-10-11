@@ -136,7 +136,7 @@ function IndiceCompleto({ paises, abiertos }: { paises: Pais[]; abiertos: Set<st
                                         {lecciones.map((l) => (
                                           <li key={l.id}>
                                             <Link
-                                              href={`/leccion/${l.id}`}
+                                              href={`/leccion/${l.id}?tema=${t.id}`}
                                               className="block min-h-12 rounded-md py-3 px-2 text-blue-800 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
                                             >
                                               {l.titulo}

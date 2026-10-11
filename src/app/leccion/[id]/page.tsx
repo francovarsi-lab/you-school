@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { resolveVideoReference } from '@/lib/video';
@@ -23,17 +23,33 @@ interface Fuente {
   licencia: string | null;
 }
 
+interface Entrada {
+  id: string;
+  titulo: string;
+  temaId: string;
+  unidadId: string;
+  unidadNombre: string;
+}
+
+interface Enlace {
+  href: string;
+  texto: string;
+}
+
 interface LeccionData {
   titulo: string;
-  slug: string;
   fuente: Fuente | null;
   urlOrigen: string | null;
   bloques: Bloque[];
   crumbs: Crumb[];
-  temaNombre: string;
-  prevId?: string;
-  nextId?: string;
+  prev: Enlace | null;
+  next: Enlace | null;
+  materiaNombre: string;
+  materiaHref: string;
+  posicion: { n: number; m: number; unidad: string } | null;
 }
+
+const porOrden = <T extends { orden?: number | null }>(a: T, b: T) => (a.orden ?? Infinity) - (b.orden ?? Infinity);
 
 function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; origen: string | null }) {
   const [fallo, setFallo] = useState(false);
@@ -73,7 +89,9 @@ function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; or
 
 export default function LeccionPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const leccionId = params.id as string;
+  const temaParam = searchParams.get('tema');
   const [leccion, setLeccion] = useState<LeccionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +105,7 @@ export default function LeccionPage() {
         const { data, error: qError } = await supabase
           .from('ubicaciones_curriculares')
           .select(`
-            tema_id,
+            tema_id, orden,
             lecciones!inner (
               id,
               titulo,
@@ -126,7 +144,7 @@ export default function LeccionPage() {
           .eq('leccion_id', leccionId)
           .eq('estado', 'publicado')
           .eq('lecciones.estado', 'publicado')
-          .limit(1);
+          .order('orden');
 
         if (qError) {
           setError(`Error al cargar la lección: ${qError.message}`);
@@ -137,7 +155,8 @@ export default function LeccionPage() {
           return;
         }
 
-        const row = data[0] as any;
+        const rows = data as any[];
+        const row = rows.find((r) => r.tema_id === temaParam) ?? rows[0];
         const lec = row.lecciones;
         const tema = row.temas;
         const unidad = tema.unidades;
@@ -157,27 +176,61 @@ export default function LeccionPage() {
           { nombre: tema.nombre, href: `/estudiar?abrir=${tema.id}` },
         ];
 
-        const { data: hermanas } = await supabase
-          .from('ubicaciones_curriculares')
-          .select('leccion_id, orden, lecciones!inner ( estado )')
-          .eq('tema_id', row.tema_id)
-          .eq('estado', 'publicado')
-          .eq('lecciones.estado', 'publicado')
-          .order('orden');
+        const { data: mat } = await supabase
+          .from('materias')
+          .select(`
+            id, nombre,
+            unidades (
+              id, nombre, orden,
+              temas (
+                id, nombre, orden,
+                ubicaciones_curriculares ( orden, estado, lecciones ( id, titulo, estado ) )
+              )
+            )
+          `)
+          .eq('id', materia.id)
+          .single();
 
-        const ids = (hermanas ?? []).map((h: any) => h.leccion_id as string);
-        const idx = ids.indexOf(leccionId);
+        const secuencia: Entrada[] = [];
+        for (const u of [...((mat as any)?.unidades ?? [])].sort(porOrden)) {
+          for (const t of [...u.temas].sort(porOrden)) {
+            const ubs = (t.ubicaciones_curriculares as any[])
+              .filter((ub) => ub.estado === 'publicado' && ub.lecciones?.estado === 'publicado')
+              .sort(porOrden);
+            for (const ub of ubs) {
+              secuencia.push({ id: ub.lecciones.id, titulo: ub.lecciones.titulo, temaId: t.id, unidadId: u.id, unidadNombre: u.nombre });
+            }
+          }
+        }
+
+        const enSecuencia = (e: Entrada) => e.id === leccionId && e.temaId === tema.id;
+        let idx = secuencia.findIndex(enSecuencia);
+        if (idx === -1) idx = secuencia.findIndex((e) => e.id === leccionId);
+        const actual = idx >= 0 ? secuencia[idx] : null;
+
+        const volverMateria: Enlace = { href: `/estudiar?abrir=${materia.id}`, texto: `Volver a ${materia.nombre}` };
+        const enlaceA = (e: Entrada, texto: string): Enlace => ({ href: `/leccion/${e.id}?tema=${e.temaId}`, texto });
+        const prev = idx > 0 ? enlaceA(secuencia[idx - 1], '← Anterior') : volverMateria;
+        const next = idx >= 0 && idx < secuencia.length - 1 ? enlaceA(secuencia[idx + 1], 'Siguiente →') : volverMateria;
+
+        let posicion: LeccionData['posicion'] = null;
+        if (actual) {
+          const deUnidad = secuencia.filter((e) => e.unidadId === actual.unidadId);
+          const n = deUnidad.findIndex((e) => e.id === actual.id && e.temaId === actual.temaId) + 1;
+          posicion = { n, m: deUnidad.length, unidad: actual.unidadNombre };
+        }
 
         setLeccion({
           titulo: lec.titulo,
-          slug: lec.slug,
           fuente: lec.fuentes ?? null,
           urlOrigen: lec.url_origen ?? null,
           bloques: [...(lec.bloques_contenido ?? [])].sort((a: Bloque, b: Bloque) => a.orden - b.orden),
           crumbs,
-          temaNombre: tema.nombre,
-          prevId: idx > 0 ? ids[idx - 1] : undefined,
-          nextId: idx >= 0 && idx < ids.length - 1 ? ids[idx + 1] : undefined,
+          prev,
+          next,
+          materiaNombre: materia.nombre,
+          materiaHref: `/estudiar?abrir=${materia.id}`,
+          posicion,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
@@ -187,7 +240,7 @@ export default function LeccionPage() {
     };
 
     fetchLeccion();
-  }, [leccionId]);
+  }, [leccionId, temaParam]);
 
   if (loading) {
     return (
@@ -239,6 +292,11 @@ export default function LeccionPage() {
         </nav>
 
         <article className="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
+          {leccion.posicion && (
+            <p className="text-sm font-semibold text-gray-800 mb-2">
+              Lección {leccion.posicion.n} de {leccion.posicion.m} en {leccion.posicion.unidad}
+            </p>
+          )}
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{leccion.titulo}</h1>
 
           <div className="space-y-6">
@@ -300,23 +358,19 @@ export default function LeccionPage() {
           )}
         </article>
 
-        <div className="flex gap-4 justify-between">
-          {leccion.prevId ? (
-            <Link
-              href={`/leccion/${leccion.prevId}`}
-              className="px-6 py-3 bg-gray-200 text-gray-900 font-semibold rounded-lg hover:bg-gray-300"
-            >
-              ← Anterior
-            </Link>
-          ) : <span />}
-          {leccion.nextId ? (
-            <Link
-              href={`/leccion/${leccion.nextId}`}
-              className="px-6 py-3 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800"
-            >
-              Siguiente →
-            </Link>
-          ) : <span />}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href={leccion.prev!.href}
+            className="flex min-h-14 items-center justify-center px-6 py-4 bg-gray-200 text-gray-900 font-semibold rounded-lg hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+          >
+            {leccion.prev!.texto}
+          </Link>
+          <Link
+            href={leccion.next!.href}
+            className="flex min-h-14 items-center justify-center px-6 py-4 bg-blue-800 text-white font-semibold rounded-lg hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+          >
+            {leccion.next!.texto}
+          </Link>
         </div>
       </div>
     </div>

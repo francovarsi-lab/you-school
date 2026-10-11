@@ -38,7 +38,8 @@ Lo aprendido (gotchas):
 
 Estado y pendientes:
 - Confirmado: despliegue en Vercel desde master, variables de entorno, cron de keepalive y selector de Conocimientos en Directus.
-- Contenido: Argentina > NAP Argentina > Primaria (7 años con sus áreas) > 4to grado > Matemática > Números > Fracciones, con 4 lecciones en orden: 1 y 2 de prueba (una de texto, "TIPOS DE FRACCIONES", con video de YouTube de un tercero), 3 y 4 de educ.ar (CC BY-NC-SA, MP4 del reproductor de educ.ar).
+- Contenido: Argentina > NAP Argentina > Primaria (7 años con sus áreas) > materias de cada año. Lecciones de educ.ar (CC BY-NC-SA, MP4 del reproductor de educ.ar), cargadas desde `database/importar/lista.txt` y publicadas con `database/publicar-lecciones.js`.
+- Conteos al cierre: 35 lecciones publicadas y 1 en borrador (la de prueba de Daniel Carreón, de un tercero, que queda en borrador).
+- Navegación: "Anterior" y "Siguiente" siguen el orden del curso (orden de lección, tema y unidad dentro de la materia), con `?tema=<id>` en el enlace. Al final de la materia el enlace es "Volver a <Materia>".
 - Pendiente: el diseño de /estudiar al llegar a un tema lo revisa el usuario.
-- Pendiente: la lección de Daniel Carreón es de un tercero y es contenido de prueba.
 - Directus solo corre mientras la PC y Docker estén encendidos. Las lecciones públicas no dependen de Directus: se leen de Supabase.
