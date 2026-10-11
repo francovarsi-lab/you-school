@@ -42,3 +42,6 @@ next-env.d.ts
 
 # respaldos de datos locales
 database/backups/
+
+# reportes locales de revisión
+database/reportes/
