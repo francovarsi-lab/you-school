@@ -1,0 +1,51 @@
+export const metadata = { title: 'Créditos · YOU SCHOOL' };
+
+export default function CreditosPage() {
+  const contacto = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
+
+  return (
+    <main className="min-h-screen bg-gray-50 px-4 py-8">
+      <div className="mx-auto max-w-2xl space-y-8 text-gray-900 leading-relaxed">
+        <h1 className="text-3xl font-bold">Créditos</h1>
+
+        <section aria-labelledby="que-es" className="space-y-2">
+          <h2 id="que-es" className="text-xl font-semibold">Qué es YOU SCHOOL</h2>
+          <p className="text-lg">
+            YOU SCHOOL es un proyecto educativo gratuito y sin fines de lucro. Organiza material abierto para que cualquiera pueda estudiar.
+          </p>
+        </section>
+
+        <section aria-labelledby="aviso" className="space-y-2">
+          <h2 id="aviso" className="text-xl font-semibold">Aviso</h2>
+          <p className="text-lg">
+            YOU SCHOOL no es un proyecto oficial ni está afiliado al Ministerio de Educación de la Nación ni a Educ.ar. No entrega títulos ni reemplaza a la escuela.
+          </p>
+        </section>
+
+        <section aria-labelledby="fuentes" className="space-y-2">
+          <h2 id="fuentes" className="text-xl font-semibold">Fuentes y licencias</h2>
+          <p className="text-lg">
+            Los videos pertenecen al Ministerio de Educación de la Nación y/o Educ.ar, bajo licencia Creative Commons Atribución-NoComercial-CompartirIgual (CC BY-NC-SA). Más información en{' '}
+            <a href="https://www.educ.ar" className="text-blue-900 underline underline-offset-4 hover:text-blue-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 rounded-sm">
+              educ.ar
+            </a>
+            . Cada clase muestra su fuente y su licencia.
+          </p>
+        </section>
+
+        {contacto && (
+          <section aria-labelledby="correcciones" className="space-y-2">
+            <h2 id="correcciones" className="text-xl font-semibold">Correcciones y retiros</h2>
+            <p className="text-lg">
+              Si encontrás un error o querés pedir que se retire un contenido, escribinos a{' '}
+              <a href={`mailto:${contacto}`} className="text-blue-900 underline underline-offset-4 hover:text-blue-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 rounded-sm">
+                {contacto}
+              </a>
+              .
+            </p>
+          </section>
+        )}
+      </div>
+    </main>
+  );
+}
