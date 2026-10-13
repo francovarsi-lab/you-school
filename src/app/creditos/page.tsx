@@ -21,7 +21,7 @@ export default function CreditosPage() {
         <section aria-labelledby="aviso" className="space-y-2">
           <h2 id="aviso" className="text-xl font-semibold">Aviso</h2>
           <p className="text-lg">
-            YOU SCHOOL no es un proyecto oficial ni está afiliado al Ministerio de Educación de la Nación ni a Educ.ar. No entrega títulos ni reemplaza a la escuela.
+            YOU SCHOOL no es un proyecto oficial, no entrega títulos oficiales y no está afiliado al Ministerio de Educación de la Nación ni a Educ.ar.
           </p>
         </section>
 
