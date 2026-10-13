@@ -76,7 +76,7 @@ function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; or
     <video
       className="block w-[calc(100%+2rem)] -mx-4 max-w-none rounded-none bg-black md:w-full md:mx-0 md:rounded-lg"
       controls
-      preload="metadata"
+      preload="none"
       playsInline
       src={src}
       aria-label={`Video: ${titulo}`}
@@ -84,6 +84,37 @@ function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; or
     >
       Tu navegador no puede reproducir este video.
     </video>
+  );
+}
+
+// El iframe de YouTube no se carga hasta tocar el botón: abrir la página no pide nada a YouTube.
+function VideoYouTube({ src, titulo }: { src: string; titulo: string }) {
+  const [activo, setActivo] = useState(false);
+
+  if (!activo) {
+    return (
+      <button
+        type="button"
+        onClick={() => setActivo(true)}
+        className="flex w-full aspect-video -mx-4 md:mx-0 md:rounded-lg items-center justify-center bg-black text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+      >
+        <span className="rounded-full bg-white px-6 py-3 font-semibold text-gray-900">▶ Reproducir video</span>
+        <span className="sr-only">: {titulo}</span>
+      </button>
+    );
+  }
+
+  return (
+    <div className="relative -mx-4 md:mx-0 aspect-video md:rounded-lg overflow-hidden bg-black">
+      <iframe
+        className="absolute inset-0 w-full h-full"
+        src={`${src}?autoplay=1`}
+        title={`Video: ${titulo}`}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      />
+    </div>
   );
 }
 
@@ -313,19 +344,7 @@ export default function LeccionPage() {
                 if (embed.kind === 'file') {
                   return <VideoArchivo key={i} src={embed.src} titulo={leccion.titulo} origen={origen} />;
                 }
-                return (
-                  <div key={i} className="relative -mx-4 md:mx-0 aspect-video md:rounded-lg overflow-hidden bg-black">
-                    <iframe
-                      className="absolute inset-0 w-full h-full"
-                      src={embed.src}
-                      title={`Video: ${leccion.titulo}`}
-                      loading="lazy"
-                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    />
-                  </div>
-                );
+                return <VideoYouTube key={i} src={embed.src} titulo={leccion.titulo} />;
               }
               return (
                 <p key={i} className="leading-relaxed text-gray-800 whitespace-pre-wrap break-words">
