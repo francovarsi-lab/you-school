@@ -1,4 +1,7 @@
-export const metadata = { title: 'Créditos · YOU SCHOOL' };
+export const metadata = {
+  title: 'Créditos',
+  description: 'Qué es YOU SCHOOL, de dónde salen los videos y con qué licencia se publican.',
+};
 
 export default function CreditosPage() {
   const contacto = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();

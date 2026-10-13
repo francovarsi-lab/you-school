@@ -1,8 +1,14 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import NavegadorClient from './NavegadorClient';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Estudiar',
+  description: 'Recorré la currícula por país, nivel, año, materia, unidad y tema, y encontrá las lecciones de cada uno.',
+};
 
 type Leccion = { id: string; titulo: string; estado: string };
 type Ubicacion = { orden: number | null; estado: string; lecciones: Leccion | null };

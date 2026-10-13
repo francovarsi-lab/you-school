@@ -1,4 +1,9 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  description: 'Estudiá por país, currícula, año y materia, o buscá lecciones por tema, conocimiento o etiqueta.',
+};
 
 export default function Home() {
   return (
