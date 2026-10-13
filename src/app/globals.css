@@ -32,3 +32,11 @@ body {
   font-size: 1.125rem;
   line-height: 1.6;
 }
+
+/* En base: las utilidades de Tailwind pueden sobrescribirlo (p. ej. focus:outline-none). */
+@layer base {
+  :focus-visible {
+    outline: 2px solid #1d4ed8;
+    outline-offset: 2px;
+  }
+}

@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface SearchResult {
   leccion_id: string;
@@ -12,7 +11,6 @@ interface SearchResult {
 }
 
 export default function AprenderPage() {
-  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -160,8 +158,10 @@ export default function AprenderPage() {
 
         {/* Search Input */}
         <div className="mb-8">
+          <label htmlFor="buscar" className="sr-only">Buscar lecciones</label>
           <input
-            type="text"
+            id="buscar"
+            type="search"
             placeholder="Busca lecciones, conocimientos, etiquetas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -192,16 +192,16 @@ export default function AprenderPage() {
           <div className="space-y-4">
             <p className="text-gray-600 mb-6">Se encontraron {results.length} resultado(s)</p>
             {results.map((result) => (
-              <div
+              <Link
                 key={result.leccion_id}
-                onClick={() => router.push(`/leccion/${result.leccion_id}`)}
-                className="p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 hover:border-blue-400"
+                href={`/leccion/${result.leccion_id}`}
+                className="group block p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow border border-gray-200 hover:border-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
               >
-                <h3 className="font-semibold text-gray-900 hover:text-blue-600">{result.titulo}</h3>
+                <h2 className="font-semibold text-gray-900 break-words group-hover:underline">{result.titulo}</h2>
                 {result.breadcrumb && (
                   <p className="text-sm text-gray-500 mt-2 break-words">{result.breadcrumb}</p>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         )}

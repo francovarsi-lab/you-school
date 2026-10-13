@@ -7,7 +7,7 @@ export default function CreditosPage() {
   const contacto = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8">
+    <div className="min-h-screen bg-gray-50 px-4 py-8">
       <div className="mx-auto max-w-[70ch] space-y-8 text-gray-900 leading-relaxed">
         <h1 className="text-3xl font-bold">Créditos</h1>
 
@@ -49,6 +49,6 @@ export default function CreditosPage() {
           </section>
         )}
       </div>
-    </main>
+    </div>
   );
 }

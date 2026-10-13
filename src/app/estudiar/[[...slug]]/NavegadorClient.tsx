@@ -231,7 +231,7 @@ export default function NavegadorClient({ slug }: { slug: string[] }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="bg-red-50 p-6 rounded-lg border border-red-200">
-          <h2 className="text-red-800 font-semibold mb-2">Error</h2>
+          <h1 className="text-red-800 font-semibold mb-2">Error</h1>
           <p className="text-red-700">{error}</p>
         </div>
       </div>
@@ -242,7 +242,7 @@ export default function NavegadorClient({ slug }: { slug: string[] }) {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         {breadcrumb.length > 0 && (
-          <nav className="mb-8">
+          <nav aria-label="Ubicación curricular" className="mb-8">
             <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-700">
               <li>
                 <Link href="/" className={linkClass}>

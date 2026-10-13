@@ -25,7 +25,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}
+        <a
+          href="#contenido"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-4 focus:py-3 focus:text-blue-900 focus:underline focus:outline-2 focus:outline-blue-700"
+        >
+          Saltar al contenido
+        </a>
+        <main id="contenido" className="flex-1">
+          {children}
+        </main>
         <footer className="mt-auto border-t border-gray-400 bg-white px-4 py-3 text-center">
           <Link
             href="/creditos"
