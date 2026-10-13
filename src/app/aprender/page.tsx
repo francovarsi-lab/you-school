@@ -165,7 +165,7 @@ export default function AprenderPage() {
             placeholder="Busca lecciones, conocimientos, etiquetas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 bg-white text-gray-900 border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500 dark:bg-gray-900 dark:text-white dark:border-gray-600 dark:placeholder-gray-400"
+            className="w-full px-4 py-3 bg-white text-gray-900 border-2 border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500"
           />
         </div>
 

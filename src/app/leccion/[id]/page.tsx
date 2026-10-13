@@ -268,7 +268,7 @@ export default function LeccionPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-[70ch] mx-auto">
         <nav aria-label="Ubicación curricular" className="mb-8">
           <ol className="flex flex-wrap gap-x-2 gap-y-1 text-sm text-gray-700">
             <li>

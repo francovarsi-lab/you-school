@@ -8,7 +8,7 @@ export default function CreditosPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="mx-auto max-w-2xl space-y-8 text-gray-900 leading-relaxed">
+      <div className="mx-auto max-w-[70ch] space-y-8 text-gray-900 leading-relaxed">
         <h1 className="text-3xl font-bold">Créditos</h1>
 
         <section aria-labelledby="que-es" className="space-y-2">
