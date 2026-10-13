@@ -190,7 +190,9 @@ export default function AprenderPage() {
 
         {hasSearched && !loading && results.length > 0 && (
           <div className="space-y-4">
-            <p className="text-gray-600 mb-6">Se encontraron {results.length} resultado(s)</p>
+            <p className="text-gray-600 mb-6">
+              {results.length === 1 ? 'Se encontró 1 resultado' : `Se encontraron ${results.length} resultados`}
+            </p>
             {results.map((result) => (
               <Link
                 key={result.leccion_id}

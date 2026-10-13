@@ -16,6 +16,16 @@ interface ListItem {
   type: 'curricula' | 'nivel' | 'anio' | 'materia' | 'unidad' | 'tema' | 'leccion';
 }
 
+const TIPO_LEGIBLE: Record<ListItem['type'], string> = {
+  curricula: 'Currícula',
+  nivel: 'Nivel',
+  anio: 'Año',
+  materia: 'Materia',
+  unidad: 'Unidad',
+  tema: 'Tema',
+  leccion: 'Clase',
+};
+
 const linkClass =
   'inline-flex min-h-11 items-center rounded-sm text-blue-800 no-underline hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700';
 
@@ -206,7 +216,8 @@ export default function NavegadorClient({ slug }: { slug: string[] }) {
           return;
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
+        console.error(err);
+        setError('No se pudo cargar esta parte de la currícula. Probá de nuevo más tarde.');
       } finally {
         setLoading(false);
       }
@@ -278,7 +289,7 @@ export default function NavegadorClient({ slug }: { slug: string[] }) {
                 className="p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow text-left border border-gray-200 hover:border-blue-400"
               >
                 <p className="font-semibold text-gray-900 break-words">{item.nombre}</p>
-                <p className="text-sm text-gray-500 mt-1">{item.type}</p>
+                <p className="text-sm text-gray-500 mt-1">{TIPO_LEGIBLE[item.type]}</p>
               </button>
             ))}
           </div>

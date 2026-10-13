@@ -178,7 +178,8 @@ export default function LeccionPage() {
           .order('orden');
 
         if (qError) {
-          setError(`Error al cargar la lección: ${qError.message}`);
+          console.error(qError);
+          setError('No se pudo cargar la lección. Probá de nuevo más tarde.');
           return;
         }
         if (!data || data.length === 0) {
@@ -264,7 +265,8 @@ export default function LeccionPage() {
           posicion,
         });
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
+        console.error(err);
+        setError('No se pudo cargar la lección. Probá de nuevo más tarde.');
       } finally {
         setLoading(false);
       }
@@ -337,7 +339,7 @@ export default function LeccionPage() {
                 if (!embed.ok) {
                   return (
                     <div key={i} className="p-4 bg-amber-50 border border-amber-400 rounded text-amber-900">
-                      No se puede mostrar el video: {embed.error}
+                      Este video no se puede mostrar en este momento.
                     </div>
                   );
                 }
