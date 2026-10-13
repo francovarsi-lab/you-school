@@ -63,6 +63,26 @@ function valorDespues(lineas, etiqueta) {
   return i === -1 || i + 1 >= lineas.length ? null : lineas[i + 1];
 }
 
+// Valores que siguen a una etiqueta, hasta la siguiente etiqueta de la ficha.
+const ETIQUETAS_FICHA = ['Área / disciplina', 'Nivel', 'Categoría', 'Modalidad', 'Formato', 'Etiquetas',
+  'Autor/es', 'Otros contribuyentes', 'Licencia', 'Duración', 'Audiencia', 'Publicado', 'Última modificación'];
+function valoresDe(lineas, etiqueta) {
+  const i = lineas.findIndex((l) => l === etiqueta);
+  if (i === -1) return [];
+  const out = [];
+  for (let j = i + 1; j < lineas.length && !ETIQUETAS_FICHA.includes(lineas[j]); j++) out.push(lineas[j]);
+  return out;
+}
+
+// Material pensado para docentes o recortes no entra (ver CLAUDE.md, principio de alumno).
+function motivoExcluir(ficha) {
+  const audiencia = ficha.audiencia ?? [];
+  if (audiencia.length && audiencia.every((a) => sinTildes(a) === 'docentes')) return 'audiencia "Solo docentes"';
+  const texto = sinTildes(`${ficha.titulo ?? ''} ${ficha.descripcion ?? ''}`);
+  if (/\brecorte\b|\bfragmento\b/.test(texto)) return 'título o descripción dice "recorte" o "fragmento"';
+  return null;
+}
+
 function valorOtrosContribuyentes(lineas) {
   const i = lineas.findIndex((l) => l === 'Otros contribuyentes');
   if (i === -1) return null;
@@ -90,6 +110,10 @@ function licenciaCC(texto) {
   return { ok: true, codigo: 'CC BY' + (nc ? '-NC' : '') + (sa ? '-SA' : '') };
 }
 
+function sinTildes(s) {
+  return String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
 function slugify(s) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
@@ -109,6 +133,7 @@ async function leerFicha(url) {
     titulo,
     descripcion: meta || null,
     autor: valorDespues(lineas, 'Autor/es'),
+    audiencia: valoresDe(lineas, 'Audiencia'),
     otros: valorOtrosContribuyentes(lineas),
     formato: valorDespues(lineas, 'Formato'),
     licencia: valorDespues(lineas, 'Licencia'),
@@ -175,6 +200,8 @@ async function procesarLinea(linea, numero, idiomaId) {
   let ficha;
   try { ficha = await leerFicha(url); } catch (e) { return { resultado: 'rechazada', motivo: `no se pudo leer la ficha: ${e.message}` }; }
   if (!ficha.titulo) return { resultado: 'rechazada', motivo: 'la ficha no tiene título' };
+  const exclusion = motivoExcluir(ficha);
+  if (exclusion) return { resultado: 'excluida', motivo: exclusion };
 
   const lic = licenciaCC(ficha.licencia);
   if (!lic.ok) return { resultado: 'rechazada', motivo: lic.motivo };
@@ -240,8 +267,13 @@ async function main() {
     filas.push({ linea: e.n, ...r });
   }
   const ancho = (s, n) => String(s).padEnd(n).slice(0, n);
+  const excluidas = filas.filter((f) => f.resultado === 'excluida');
   console.log(ancho('Línea', 6), ancho('Resultado', 20), 'Motivo');
-  for (const f of filas) console.log(ancho(f.linea, 6), ancho(f.resultado, 20), f.motivo);
+  for (const f of filas.filter((f) => f.resultado !== 'excluida')) console.log(ancho(f.linea, 6), ancho(f.resultado, 20), f.motivo);
+  if (excluidas.length) {
+    console.log('\nExcluidas por regla (no se importan):');
+    for (const f of excluidas) console.log(ancho(f.linea, 6), f.motivo);
+  }
 }
 
 main().catch((e) => { console.error('ERROR:', e.message); process.exit(1); });
