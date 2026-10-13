@@ -9,6 +9,7 @@ Principios:
 - Una lección es contenido reutilizable. Su ubicación curricular es una relación, no una propiedad.
 - El sitio crece agregando contenido, no modificando código.
 - El contenido se administra sin tocar el frontend.
+- YOU SCHOOL se construye para el alumno que quiere estudiar, no para el docente. Una lección pública debe: 1) estar dirigida al alumno, 2) enseñar un concepto concreto y tener un título que lo diga, 3) entenderse sola, 4) encajar en un tema del currículo. El material pensado para docentes no va (para eso existe Educ.ar).
 
 Usuario: no es programador y habla español rioplatense. Explicar brevemente antes de ejecutar. No dar nada por resuelto hasta que lo confirme en el navegador. Nunca pedir ni mostrar contraseñas.
 
