@@ -36,7 +36,11 @@ node database/import-educar.js
    - **creada (simulacro)**: se importaría.
    - **saltada**: ya existe una lección con esa ficha o ese slug.
    - **rechazada**: no cumple algo (licencia, formato, año, materia o video). El motivo aparece al lado.
-   - **excluida**: la ficha tiene audiencia "Solo docentes" o dice "recorte" o "fragmento" en título o descripción. No se importa; aparece en una lista aparte al final.
+   - **excluida**: el título o la descripción dice "recorte" o "fragmento". No se importa; aparece en una lista aparte al final.
+   - **a revisar**: la audiencia de la ficha no incluye "Estudiantes" ni "General" (solo "Docentes", o no indica audiencia). No se importa hasta que alguien lo decida; aparece en una lista aparte.
+   - **otro formato**: la ficha no es un video (Interactivo, Juego, Libro electrónico, etc.). No se importa; aparece en una lista aparte.
+
+Solo se importan fichas de **video**, con audiencia **Estudiantes** o **General**, y sin "recorte" ni "fragmento".
 
 ## 3. Aplicar
 

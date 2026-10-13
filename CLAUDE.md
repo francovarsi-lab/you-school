@@ -27,6 +27,7 @@ Reglas:
 - La clave secreta/service key nunca va al frontend. Solo la clave pública `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 - No commitear `.env*` ni `database/backups/` (ya están en `.gitignore`).
 - Sin credenciales ni claves en archivos versionados. Los scripts leen `directus-admin/.env` sin imprimirlo.
+- Importador de Educ.ar (`database/import-educar.js`): solo entran fichas de video con audiencia Estudiantes o General, sin "recorte" ni "fragmento" en título o descripción. Docentes-only o sin audiencia van a "a revisar"; otros formatos (Interactivo, Juego, Libro electrónico) quedan aparte sin importarse.
 
 Lo aprendido (gotchas):
 - El entorno es Windows, con Claude Code en la app de escritorio. Los comandos se ejecutan con Git Bash.

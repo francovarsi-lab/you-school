@@ -74,13 +74,21 @@ function valoresDe(lineas, etiqueta) {
   return out;
 }
 
-// Material pensado para docentes o recortes no entra (ver CLAUDE.md, principio de alumno).
+// Reglas de entrada (ver CLAUDE.md, principio de alumno).
+// Recortes y fragmentos se excluyen; las fichas sin audiencia para alumnos van a "a revisar".
 function motivoExcluir(ficha) {
-  const audiencia = ficha.audiencia ?? [];
-  if (audiencia.length && audiencia.every((a) => sinTildes(a) === 'docentes')) return 'audiencia "Solo docentes"';
   const texto = sinTildes(`${ficha.titulo ?? ''} ${ficha.descripcion ?? ''}`);
   if (/\brecorte\b|\bfragmento\b/.test(texto)) return 'título o descripción dice "recorte" o "fragmento"';
   return null;
+}
+
+// Solo entran fichas con audiencia Estudiantes o General. El resto se revisa a mano.
+function motivoRevisar(ficha) {
+  const aud = (ficha.audiencia ?? []).map(sinTildes);
+  if (!aud.length) return 'la ficha no indica audiencia';
+  if (aud.some((a) => a === 'estudiantes' || a === 'general')) return null;
+  if (aud.every((a) => a === 'docentes')) return 'audiencia solo "Docentes"';
+  return `audiencia no admitida: ${ficha.audiencia.join(', ')}`;
 }
 
 function valorOtrosContribuyentes(lineas) {
@@ -202,10 +210,12 @@ async function procesarLinea(linea, numero, idiomaId) {
   if (!ficha.titulo) return { resultado: 'rechazada', motivo: 'la ficha no tiene título' };
   const exclusion = motivoExcluir(ficha);
   if (exclusion) return { resultado: 'excluida', motivo: exclusion };
+  if (ficha.formato !== 'Video') return { resultado: 'otro formato', motivo: `formato "${ficha.formato ?? 'sin formato'}": no se importa` };
+  const revisar = motivoRevisar(ficha);
+  if (revisar) return { resultado: 'a revisar', motivo: revisar };
 
   const lic = licenciaCC(ficha.licencia);
   if (!lic.ok) return { resultado: 'rechazada', motivo: lic.motivo };
-  if (ficha.formato !== 'Video') return { resultado: 'rechazada', motivo: `formato "${ficha.formato}": solo se importan videos` };
   if (!ficha.mp4) return { resultado: 'rechazada', motivo: 'no se encontró el MP4 en la ficha' };
   const v = await verificarMp4(ficha.mp4);
   if (!v.ok) return { resultado: 'rechazada', motivo: v.motivo };
@@ -267,12 +277,18 @@ async function main() {
     filas.push({ linea: e.n, ...r });
   }
   const ancho = (s, n) => String(s).padEnd(n).slice(0, n);
-  const excluidas = filas.filter((f) => f.resultado === 'excluida');
+  const APARTE = {
+    'a revisar': 'A revisar (no se importan hasta decidir)',
+    'otro formato': 'Otros formatos (no se importan)',
+    'excluida': 'Excluidas por recorte o fragmento',
+  };
   console.log(ancho('Línea', 6), ancho('Resultado', 20), 'Motivo');
-  for (const f of filas.filter((f) => f.resultado !== 'excluida')) console.log(ancho(f.linea, 6), ancho(f.resultado, 20), f.motivo);
-  if (excluidas.length) {
-    console.log('\nExcluidas por regla (no se importan):');
-    for (const f of excluidas) console.log(ancho(f.linea, 6), f.motivo);
+  for (const f of filas.filter((f) => !APARTE[f.resultado])) console.log(ancho(f.linea, 6), ancho(f.resultado, 20), f.motivo);
+  for (const [resultado, titulo] of Object.entries(APARTE)) {
+    const grupo = filas.filter((f) => f.resultado === resultado);
+    if (!grupo.length) continue;
+    console.log(`\n${titulo}:`);
+    for (const f of grupo) console.log(ancho(f.linea, 6), f.motivo);
   }
 }
 
