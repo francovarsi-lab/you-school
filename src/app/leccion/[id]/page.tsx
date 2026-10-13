@@ -63,7 +63,7 @@ function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; or
             href={origen}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block mt-2 text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
+            className="inline-flex min-h-11 items-center mt-2 text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
           >
             Ver en Educ.ar
           </a>
@@ -74,7 +74,7 @@ function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; or
 
   return (
     <video
-      className="w-full rounded-lg bg-black"
+      className="block w-[calc(100%+2rem)] -mx-4 max-w-none rounded-none bg-black md:w-full md:mx-0 md:rounded-lg"
       controls
       preload="metadata"
       playsInline
@@ -256,7 +256,7 @@ export default function LeccionPage() {
         <div className="max-w-md w-full p-8 bg-red-50 border-2 border-red-400 rounded-lg">
           <h1 className="text-2xl font-bold text-red-900 mb-4">Error</h1>
           <p className="text-red-800 mb-4">{error ?? 'Sin datos'}</p>
-          <Link href="/estudiar" className="text-blue-800 underline">
+          <Link href="/estudiar" className="inline-flex min-h-11 items-center text-blue-800 underline">
             Volver a Estudiar
           </Link>
         </div>
@@ -272,7 +272,7 @@ export default function LeccionPage() {
         <nav aria-label="Ubicación curricular" className="mb-8">
           <ol className="flex flex-wrap gap-x-2 gap-y-1 text-sm text-gray-700">
             <li>
-              <Link href="/estudiar" className="text-blue-800 underline hover:text-blue-900">
+              <Link href="/estudiar" className="inline-flex min-h-11 items-center text-blue-800 underline hover:text-blue-900">
                 Inicio
               </Link>
             </li>
@@ -282,7 +282,7 @@ export default function LeccionPage() {
                 {i === leccion.crumbs.length - 1 ? (
                   <span className="font-semibold text-gray-900" aria-current="page">{c.nombre}</span>
                 ) : (
-                  <Link href={c.href} className="text-blue-800 underline hover:text-blue-900">
+                  <Link href={c.href} className="inline-flex min-h-11 items-center text-blue-800 underline hover:text-blue-900">
                     {c.nombre}
                   </Link>
                 )}
@@ -291,13 +291,13 @@ export default function LeccionPage() {
           </ol>
         </nav>
 
-        <article className="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-8">
+        <article className="bg-white rounded-lg shadow-lg p-4 md:p-8 mb-8">
           {leccion.posicion && (
-            <p className="text-sm font-semibold text-gray-800 mb-2">
+            <p className="text-sm font-semibold text-gray-800 mb-2 break-words">
               Lección {leccion.posicion.n} de {leccion.posicion.m} en {leccion.posicion.unidad}
             </p>
           )}
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{leccion.titulo}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 break-words">{leccion.titulo}</h1>
 
           <div className="space-y-6">
             {leccion.bloques.map((b, i) => {
@@ -314,7 +314,7 @@ export default function LeccionPage() {
                   return <VideoArchivo key={i} src={embed.src} titulo={leccion.titulo} origen={origen} />;
                 }
                 return (
-                  <div key={i} className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+                  <div key={i} className="relative -mx-4 md:mx-0 aspect-video md:rounded-lg overflow-hidden bg-black">
                     <iframe
                       className="absolute inset-0 w-full h-full"
                       src={embed.src}
@@ -328,7 +328,7 @@ export default function LeccionPage() {
                 );
               }
               return (
-                <p key={i} className="text-lg leading-relaxed text-gray-800 whitespace-pre-wrap">
+                <p key={i} className="leading-relaxed text-gray-800 whitespace-pre-wrap break-words">
                   {b.referencia}
                 </p>
               );
@@ -339,14 +339,14 @@ export default function LeccionPage() {
           </div>
 
           {leccion.fuente && (
-            <p className="mt-6 pt-4 border-t border-gray-300 text-sm text-gray-800">
+            <p className="mt-6 pt-4 border-t border-gray-300 text-sm text-gray-800 break-words">
               Fuente:{' '}
               {origen ? (
                 <a
                   href={origen}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
+                  className="inline-flex min-h-11 items-center text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
                 >
                   {leccion.fuente.nombre}
                 </a>

@@ -105,7 +105,7 @@ function Nodo({ id, titulo, count, nivel, abiertos, children }: { id: string; ti
   return (
     <details open={abiertos.has(id)} className="mt-2 border-l-2 border-gray-300 pl-3">
       <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-md py-2 pr-2 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
-        <span className={`font-semibold ${vacio ? 'text-gray-600' : 'text-gray-900'} ${nivel === 0 ? 'text-xl' : 'text-base'}`}>
+        <span className={`break-words font-semibold ${vacio ? 'text-gray-600' : 'text-gray-900'} ${nivel === 0 ? 'text-xl' : 'text-base'}`}>
           {titulo}
         </span>
         <span className="shrink-0 text-sm text-gray-700">

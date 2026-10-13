@@ -199,7 +199,7 @@ export default function AprenderPage() {
               >
                 <h3 className="font-semibold text-gray-900 hover:text-blue-600">{result.titulo}</h3>
                 {result.breadcrumb && (
-                  <p className="text-sm text-gray-500 mt-2">{result.breadcrumb}</p>
+                  <p className="text-sm text-gray-500 mt-2 break-words">{result.breadcrumb}</p>
                 )}
               </div>
             ))}

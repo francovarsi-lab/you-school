@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
       <div className="text-center max-w-md">
-        <h1 className="text-5xl font-bold text-gray-900 mb-8">YOU SCHOOL</h1>
+        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-8">YOU SCHOOL</h1>
         <p className="text-lg text-gray-600 mb-12">Plataforma educativa para explorar y aprender</p>
 
         <div className="space-y-4">
