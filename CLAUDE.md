@@ -31,7 +31,7 @@ Reglas:
 - Importador de Educ.ar (`database/import-educar.js`): solo entran fichas de video con audiencia Estudiantes o General, sin "recorte" ni "fragmento" en título o descripción. Docentes-only o sin audiencia van a "a revisar"; otros formatos (Interactivo, Juego, Libro electrónico) quedan aparte sin importarse.
 - Ajustes por ficha (`database/importar/ajustes.json`): título y descripción aprobados, por número de ficha. Si la descripción de Educ.ar menciona juegos o actividades y no hay ajuste, el simulacro advierte.
 - Chequeo de videos: `node database/chequear-videos.js` (solo lectura). Reporte en `docs/reporte-videos.md`.
-- Guía para revisar y publicar lecciones: `docs/GUIA-REVISION.md`. Pendientes de decisión: `docs/revision-pendiente.md`.
+- Guía para revisar y publicar lecciones: `docs/GUIA-REVISION.md`. Pendientes de decisión: `docs/revision-pendiente.md`. Fuentes candidatas con licencias verificadas: `docs/fuentes-candidatas.md`.
 
 Lo aprendido (gotchas):
 - El entorno es Windows, con Claude Code en la app de escritorio. Los comandos se ejecutan con Git Bash.

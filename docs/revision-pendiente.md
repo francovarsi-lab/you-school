@@ -28,3 +28,12 @@ La regla del importador excluye fichas con esas palabras. Estas seis ya están c
 |---|---|---|
 | https://www.educ.ar/recursos/152995/la-clase-del-d%C3%ADa:-la-proporcionalidad-directa (La clase del día: La proporcionalidad directa) | **A revisar**: tiene el aviso "Archivo educ.ar" (recurso desactualizado) y recomienda mirar solo un tramo del video (desde 5 min 43 s hasta 12 min 36 s). Además, el importador no encuentra un MP4 en la ficha. | Decidir si el contenido sigue vigente y si el tramo alcanza. Después, revisar el MP4 y agregar la línea a una lista. |
 | https://www.educ.ar/recursos/50794/proporcionalidad (Proporcionalidad, Canal Encuentro) | **Secundaria**: el año "1er año" no existe en Directus. Solo hay Primaria. | Crear en Directus el nivel Secundaria (en NAP Argentina), los años, la materia Matemática en cada año, y después la unidad, el tema y el conocimiento. |
+
+## 4. Decisiones nuevas (13 de octubre)
+
+| Tema | Qué pasa | Qué hay que decidir |
+|---|---|---|
+| **Cuadriláteros** (ficha 127249, Horizontes Matemática) | Es un video distinto de "Mirá: cuadriláteros" (125632): otro archivo, otro autor (Educ.ar) y sin juegos. El contenido se superpone: los dos enseñan tipos de cuadriláteros. El simulacro la marca como "creada". | ¿Se importa como segunda lección del mismo tema, o se deja fuera para no repetir el concepto? |
+| **Los ángulos y su medición** (cargada, borrador) | El autor de la ficha es Educ.ar, no una persona, así que la descripción no lleva la línea "Autor: …". | ¿Se agrega igual la atribución a Educ.ar, o se deja así? |
+| **Fuentes candidatas** | Ver [docs/fuentes-candidatas.md](fuentes-candidatas.md). Pakapaka y Canal Encuentro quedaron sin licencia verificada. | ¿Se buscan más fuentes, o se contacta a Educ.ar sobre el scraping antes de automatizar el descubrimiento? |
+| **Vista previa** | El servidor de desarrollo que ya estaba corriendo en el puerto 3000 no tiene las credenciales de Directus, así que `/preview` muestra el mensaje de "faltan credenciales". | Agregar `DIRECTUS_EMAIL` y `DIRECTUS_PASSWORD` en `.env.local` y reiniciar ese servidor. |
