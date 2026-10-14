@@ -42,6 +42,26 @@ node database/import-educar.js
 
 Solo se importan fichas de **video**, con audiencia **Estudiantes** o **General**, y sin "recorte" ni "fragmento".
 
+Van también a **a revisar** las fichas que:
+- tienen el aviso "Archivo educ.ar" (recurso desactualizado; el aviso también aparece como etiqueta),
+- recomiendan mirar solo un tramo del video ("mirá especialmente desde 5 min 43 s…").
+
+### Fuente y atribución
+
+- La fuente de toda lección importada es **Educ.ar**.
+- Si el autor es una persona (no el Ministerio), la atribución va en la descripción de la lección: "Autor: Nombre, vía Educ.ar."
+- El modelo de datos no tiene un campo de atribución. Por eso queda en la descripción, que **no se muestra en la página pública**. Para verla en el sitio hace falta un cambio de esquema o de la página, y eso necesita tu autorización.
+
+### Ajustes de título
+
+`database/importar/ajustes.json` fija el título de una ficha. La clave es el número de la ficha de Educ.ar:
+
+```json
+{
+  "125633": { "titulo": "Fracciones: suma y resta" }
+}
+```
+
 ## 3. Aplicar
 
 Cuando el simulacro esté bien, ejecutá:

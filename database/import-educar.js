@@ -14,8 +14,11 @@ const LISTA_ARG = process.argv.find((a) => a.startsWith('--lista='));
 const LISTA = LISTA_ARG ? LISTA_ARG.slice('--lista='.length) : path.join(__dirname, 'importar', 'lista.txt');
 const UA = 'YOU-SCHOOL-importador (proyecto educativo gratuito)';
 const EDUCAR_HOST = 'educar.arsat.com.ar';
-const FUENTE_MINISTERIO = 'Ministerio de Educación de la Nación / Educ.ar';
+const FUENTE = 'Educ.ar';
 const AUTOR_MINISTERIO = 'Ministerio de Educación de la Nación';
+// Títulos fijados a mano por ficha (clave: número de ficha). Ver docs/IMPORTAR-EDUCAR.md.
+const AJUSTES_FILE = path.join(__dirname, 'importar', 'ajustes.json');
+const AJUSTES = fs.existsSync(AJUSTES_FILE) ? JSON.parse(fs.readFileSync(AJUSTES_FILE, 'utf-8')) : {};
 const LICENCIAS = { 'by': 'CC BY', 'by-sa': 'CC BY-SA', 'by-nc': 'CC BY-NC', 'by-nc-sa': 'CC BY-NC-SA' };
 
 const env = {};
@@ -84,6 +87,8 @@ function motivoExcluir(ficha) {
 
 // Solo entran fichas con audiencia Estudiantes o General. El resto se revisa a mano.
 function motivoRevisar(ficha) {
+  if (/archivo educ\.ar/i.test(ficha.texto)) return 'la ficha tiene el aviso "Archivo educ.ar" (recurso desactualizado)';
+  if (/mirar\s+(especialmente\s+)?(desde|solo|sólo)\b/i.test(ficha.texto)) return 'la ficha recomienda mirar solo un tramo del video';
   const aud = (ficha.audiencia ?? []).map(sinTildes);
   if (!aud.length) return 'la ficha no indica audiencia';
   if (aud.some((a) => a === 'estudiantes' || a === 'general')) return null;
@@ -139,6 +144,7 @@ async function leerFicha(url) {
     .filter((u) => !u.includes('/descarga/'));
   return {
     titulo,
+    texto: lineas.join(' '),
     descripcion: meta || null,
     autor: valorDespues(lineas, 'Autor/es'),
     audiencia: valoresDe(lineas, 'Audiencia'),
@@ -208,6 +214,7 @@ async function procesarLinea(linea, numero, idiomaId) {
   let ficha;
   try { ficha = await leerFicha(url); } catch (e) { return { resultado: 'rechazada', motivo: `no se pudo leer la ficha: ${e.message}` }; }
   if (!ficha.titulo) return { resultado: 'rechazada', motivo: 'la ficha no tiene título' };
+  ficha.titulo = AJUSTES[parsed.pathname.split('/')[2]]?.titulo ?? ficha.titulo;
   const exclusion = motivoExcluir(ficha);
   if (exclusion) return { resultado: 'excluida', motivo: exclusion };
   if (ficha.formato !== 'Video') return { resultado: 'otro formato', motivo: `formato "${ficha.formato ?? 'sin formato'}": no se importa` };
@@ -227,8 +234,11 @@ async function procesarLinea(linea, numero, idiomaId) {
   const jer = await resolverJerarquia(anioNombre, materiaNombre, unidadNombre, temaNombre, conocimientoNombre, []).catch((e) => ({ ok: false, motivo: e.message }));
   if (!jer.ok) return { resultado: 'rechazada', motivo: jer.motivo };
 
+  // La fuente es siempre Educ.ar. Si el autor es una persona, va en la descripción
+  // (el modelo no tiene campo de atribución).
   const esMinisterio = ficha.autor === AUTOR_MINISTERIO;
-  const nombreFuente = esMinisterio ? FUENTE_MINISTERIO : ficha.autor;
+  const atribucion = !ficha.autor || esMinisterio ? null : `${ficha.autor}, vía Educ.ar`;
+  const descripcion = [ficha.descripcion, atribucion && `Autor: ${atribucion}.`].filter(Boolean).join(' ') || null;
   const plan = [];
   plan.push(`lección "${ficha.titulo}" (slug ${slug}, borrador, url_origen)`);
   plan.push(`bloque de video educar:${ficha.mp4.slice(0, 60)}...`);
@@ -236,14 +246,14 @@ async function procesarLinea(linea, numero, idiomaId) {
   plan.push(`ubicar en "${temaNombre}" con orden siguiente, publicado`);
 
   if (!APLICAR) {
-    return { resultado: 'creada (simulacro)', motivo: `licencia ${lic.codigo}; fuente "${nombreFuente}"; ${plan.join('; ')}` };
+    return { resultado: 'creada (simulacro)', motivo: `licencia ${lic.codigo}; fuente "${FUENTE}"${atribucion ? `; atribución "${atribucion}"` : ''}; ${plan.join('; ')}` };
   }
 
   // Escritura: fuente, lección, asociación, bloque y ubicación.
-  let fuente = (await buscar('fuentes', { nombre: nombreFuente }, 'id,nombre'))[0];
-  if (!fuente) fuente = await api('POST', '/items/fuentes', { nombre: nombreFuente, tipo: 'institución', url: 'https://www.educ.ar', licencia: lic.codigo });
+  let fuente = (await buscar('fuentes', { nombre: FUENTE }, 'id,nombre'))[0];
+  if (!fuente) fuente = await api('POST', '/items/fuentes', { nombre: FUENTE, tipo: 'institución', url: 'https://www.educ.ar', licencia: lic.codigo });
   const leccion = await api('POST', '/items/lecciones', {
-    titulo: ficha.titulo, descripcion: ficha.descripcion, slug, idioma_id: idiomaId,
+    titulo: ficha.titulo, descripcion, slug, idioma_id: idiomaId,
     estado: 'borrador', fuente_id: fuente.id, url_origen: url,
   });
   await api('POST', '/items/lecciones_conocimientos', { leccion_id: leccion.id, conocimiento_id: jer.conocimiento.id });
@@ -251,7 +261,7 @@ async function procesarLinea(linea, numero, idiomaId) {
   const enTema = await buscar('ubicaciones_curriculares', { tema_id: jer.tema.id }, 'id,orden');
   const ordenUb = Math.max(0, ...enTema.map((x) => x.orden ?? 0)) + 1;
   await api('POST', '/items/ubicaciones_curriculares', { leccion_id: leccion.id, tema_id: jer.tema.id, orden: ordenUb, estado: 'publicado' });
-  return { resultado: 'creada', motivo: `lección ${slug} en "${temaNombre}" orden ${ordenUb} (borrador); fuente "${nombreFuente}"` };
+  return { resultado: 'creada', motivo: `lección ${slug} en "${temaNombre}" orden ${ordenUb} (borrador); fuente "${FUENTE}"` };
 }
 
 async function main() {
