@@ -242,8 +242,9 @@ async function procesarLinea(linea, numero, idiomaId) {
 
   // La fuente es siempre Educ.ar. Si el autor es una persona, va en la descripción
   // (el modelo no tiene campo de atribución).
-  const esMinisterio = ficha.autor === AUTOR_MINISTERIO;
-  const atribucion = !ficha.autor || esMinisterio ? null : `${ficha.autor}, vía Educ.ar`;
+  // Atribución solo si el autor es una persona: no el Ministerio ni la propia Educ.ar.
+  const esInstitucion = !ficha.autor || [AUTOR_MINISTERIO, FUENTE].some((n) => sinTildes(n) === sinTildes(ficha.autor));
+  const atribucion = esInstitucion ? null : `${ficha.autor}, vía Educ.ar`;
   const descripcion = [ficha.descripcion, atribucion && `Autor: ${atribucion}.`].filter(Boolean).join(' ') || null;
   const plan = [];
   plan.push(`lección "${ficha.titulo}" (slug ${slug}, borrador, url_origen)`);
