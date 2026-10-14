@@ -1,0 +1,6 @@
+# Lote de Matemática (Mirá, jugá, estudiá). Ficha 152995 queda en "a revisar" y 50794 (Secundaria) pendiente: ver docs/lecciones-pendientes.md
+https://www.educ.ar/recursos/125631/mira-triangulos | 4to grado | Matemática | Geometría y medida | Triángulos | Tipos de triángulos
+https://www.educ.ar/recursos/125632/mira-cuadrilateros | 4to grado | Matemática | Geometría y medida | Cuadriláteros | Cuadriláteros
+https://www.educ.ar/recursos/125633/mira-fracciones | 5to grado | Matemática | Números y operaciones | Fracciones | Suma y resta de fracciones
+https://www.educ.ar/recursos/125634/mira-numeros-naturales | 3er grado | Matemática | Números y operaciones | Números naturales | Números naturales
+https://www.educ.ar/recursos/125635/mira-resolucion-de-problemas | 6to grado | Matemática | Resolución de problemas | Situaciones problemáticas | Resolución de problemas
