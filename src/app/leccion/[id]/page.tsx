@@ -50,7 +50,16 @@ interface LeccionData {
   posicion: { n: number; m: number; unidad: string } | null;
 }
 
-const porOrden = <T extends { orden?: number | null }>(a: T, b: T) => (a.orden ?? Infinity) - (b.orden ?? Infinity);
+// Khan Academy pide un aviso propio junto a la fuente (ver CLAUDE.md).
+function esKhanAcademy(url: string | null) {
+  try {
+    return !!url && new URL(url).hostname.endsWith('khanacademy.org');
+  } catch {
+    return false;
+  }
+}
+
+const porOrden =<T extends { orden?: number | null }>(a: T, b: T) => (a.orden ?? Infinity) - (b.orden ?? Infinity);
 
 function VideoArchivo({ src, titulo, origen }: { src: string; titulo: string; origen: string | null }) {
   const [fallo, setFallo] = useState(false);
@@ -384,6 +393,21 @@ export default function LeccionPage() {
                 leccion.fuente.nombre
               )}
               {leccion.fuente.licencia && <>. Licencia: {leccion.fuente.licencia}</>}
+            </p>
+          )}
+
+          {leccion.fuente && esKhanAcademy(leccion.fuente.url) && (
+            <p className="mt-3 text-sm text-gray-800 break-words">
+              Todo el contenido de Khan Academy está disponible gratis en{' '}
+              <a
+                href="https://www.khanacademy.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center text-blue-800 underline hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-700 rounded-sm"
+              >
+                www.khanacademy.org
+              </a>
+              . YOU SCHOOL no está afiliado a Khan Academy.
             </p>
           )}
         </article>
