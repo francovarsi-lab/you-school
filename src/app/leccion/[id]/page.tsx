@@ -38,6 +38,7 @@ interface Enlace {
 
 interface LeccionData {
   titulo: string;
+  descripcion: string | null;
   fuente: Fuente | null;
   urlOrigen: string | null;
   bloques: Bloque[];
@@ -140,6 +141,7 @@ export default function LeccionPage() {
             lecciones!inner (
               id,
               titulo,
+              descripcion,
               slug,
               estado,
               bloques_contenido ( orden, tipo, referencia ),
@@ -254,6 +256,7 @@ export default function LeccionPage() {
 
         setLeccion({
           titulo: lec.titulo,
+          descripcion: lec.descripcion?.trim() || null,
           fuente: lec.fuentes ?? null,
           urlOrigen: lec.url_origen ?? null,
           bloques: [...(lec.bloques_contenido ?? [])].sort((a: Bloque, b: Bloque) => a.orden - b.orden),
@@ -359,8 +362,14 @@ export default function LeccionPage() {
             )}
           </div>
 
+          {leccion.descripcion && (
+            <p className="mt-6 pt-4 border-t border-gray-300 text-gray-800 leading-relaxed whitespace-pre-wrap break-words">
+              {leccion.descripcion}
+            </p>
+          )}
+
           {leccion.fuente && (
-            <p className="mt-6 pt-4 border-t border-gray-300 text-sm text-gray-800 break-words">
+            <p className={`${leccion.descripcion ? 'mt-3' : 'mt-6 pt-4 border-t border-gray-300'} text-sm text-gray-800 break-words`}>
               Fuente:{' '}
               {origen ? (
                 <a
