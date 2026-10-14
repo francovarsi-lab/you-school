@@ -243,8 +243,14 @@ async function procesarLinea(linea, numero, idiomaId) {
   // La fuente es siempre Educ.ar. Si el autor es una persona, va en la descripción
   // (el modelo no tiene campo de atribución).
   // Atribución solo si el autor es una persona: no el Ministerio ni la propia Educ.ar.
-  const esInstitucion = !ficha.autor || [AUTOR_MINISTERIO, FUENTE].some((n) => sinTildes(n) === sinTildes(ficha.autor));
-  const atribucion = esInstitucion ? null : `${ficha.autor}, vía Educ.ar`;
+  // Fuente por ficha (ajustes.json): Educ.ar por defecto, o Khan Academy. Nunca se mezclan licencias.
+  const fuenteNombre = ajuste.fuente ?? FUENTE;
+  const fuenteExistente = (await buscar("fuentes", { nombre: fuenteNombre }, "id,nombre,licencia"))[0];
+  if (fuenteExistente && fuenteExistente.licencia && fuenteExistente.licencia !== lic.codigo) {
+    return { resultado: "rechazada", motivo: `la fuente "${fuenteNombre}" tiene licencia ${fuenteExistente.licencia} y la ficha es ${lic.codigo}: no se mezclan` };
+  }
+  const esInstitucion = !ficha.autor || [AUTOR_MINISTERIO, FUENTE, fuenteNombre].some((n) => sinTildes(n) === sinTildes(ficha.autor));
+  const atribucion = esInstitucion ? null : `${ficha.autor}, vía ${fuenteNombre}`;
   const descripcion = [ficha.descripcion, atribucion && `Autor: ${atribucion}.`].filter(Boolean).join(' ') || null;
   const plan = [];
   plan.push(`lección "${ficha.titulo}" (slug ${slug}, borrador, url_origen)`);
@@ -253,12 +259,11 @@ async function procesarLinea(linea, numero, idiomaId) {
   plan.push(`ubicar en "${temaNombre}" con orden siguiente, publicado`);
 
   if (!APLICAR) {
-    return { resultado: 'creada (simulacro)', motivo: `${advertencia ? advertencia + ' ' : ''}licencia ${lic.codigo}; fuente "${FUENTE}"${atribucion ? `; atribución "${atribucion}"` : ''}; ${plan.join('; ')}` };
+    return { resultado: 'creada (simulacro)', motivo: `${advertencia ? advertencia + ' ' : ''}licencia ${lic.codigo}; fuente "${fuenteNombre}"${atribucion ? `; atribución "${atribucion}"` : ''}; ${plan.join('; ')}` };
   }
 
   // Escritura: fuente, lección, asociación, bloque y ubicación.
-  let fuente = (await buscar('fuentes', { nombre: FUENTE }, 'id,nombre'))[0];
-  if (!fuente) fuente = await api('POST', '/items/fuentes', { nombre: FUENTE, tipo: 'institución', url: 'https://www.educ.ar', licencia: lic.codigo });
+  const fuente = fuenteExistente ?? await api('POST', '/items/fuentes', { nombre: fuenteNombre, tipo: 'institución', url: ajuste.fuenteUrl ?? 'https://www.educ.ar', licencia: lic.codigo });
   const leccion = await api('POST', '/items/lecciones', {
     titulo: ficha.titulo, descripcion, slug, idioma_id: idiomaId,
     estado: 'borrador', fuente_id: fuente.id, url_origen: url,
@@ -268,7 +273,7 @@ async function procesarLinea(linea, numero, idiomaId) {
   const enTema = await buscar('ubicaciones_curriculares', { tema_id: jer.tema.id }, 'id,orden');
   const ordenUb = Math.max(0, ...enTema.map((x) => x.orden ?? 0)) + 1;
   await api('POST', '/items/ubicaciones_curriculares', { leccion_id: leccion.id, tema_id: jer.tema.id, orden: ordenUb, estado: 'publicado' });
-  return { resultado: 'creada', motivo: `lección ${slug} en "${temaNombre}" orden ${ordenUb} (borrador); fuente "${FUENTE}"` };
+  return { resultado: 'creada', motivo: `lección ${slug} en "${temaNombre}" orden ${ordenUb} (borrador); fuente "${fuenteNombre}"` };
 }
 
 async function main() {
