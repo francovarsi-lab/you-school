@@ -214,7 +214,13 @@ async function procesarLinea(linea, numero, idiomaId) {
   let ficha;
   try { ficha = await leerFicha(url); } catch (e) { return { resultado: 'rechazada', motivo: `no se pudo leer la ficha: ${e.message}` }; }
   if (!ficha.titulo) return { resultado: 'rechazada', motivo: 'la ficha no tiene título' };
-  ficha.titulo = AJUSTES[parsed.pathname.split('/')[2]]?.titulo ?? ficha.titulo;
+  const ajuste = AJUSTES[parsed.pathname.split('/')[2]] ?? {};
+  ficha.titulo = ajuste.titulo ?? ficha.titulo;
+  ficha.descripcion = ajuste.descripcion ?? ficha.descripcion;
+  // Sin descripción aprobada, avisar si la de Educ.ar habla de juegos o actividades que no están en el sitio.
+  const advertencia = !ajuste.descripcion && /juego|pone a prueba|actividades interactivas/.test(sinTildes(ficha.descripcion))
+    ? 'ADVERTENCIA: la descripción de Educ.ar menciona juegos o actividades. Agregá "descripcion" en ajustes.json antes de aplicar.'
+    : null;
   const exclusion = motivoExcluir(ficha);
   if (exclusion) return { resultado: 'excluida', motivo: exclusion };
   if (ficha.formato !== 'Video') return { resultado: 'otro formato', motivo: `formato "${ficha.formato ?? 'sin formato'}": no se importa` };
@@ -246,7 +252,7 @@ async function procesarLinea(linea, numero, idiomaId) {
   plan.push(`ubicar en "${temaNombre}" con orden siguiente, publicado`);
 
   if (!APLICAR) {
-    return { resultado: 'creada (simulacro)', motivo: `licencia ${lic.codigo}; fuente "${FUENTE}"${atribucion ? `; atribución "${atribucion}"` : ''}; ${plan.join('; ')}` };
+    return { resultado: 'creada (simulacro)', motivo: `${advertencia ? advertencia + ' ' : ''}licencia ${lic.codigo}; fuente "${FUENTE}"${atribucion ? `; atribución "${atribucion}"` : ''}; ${plan.join('; ')}` };
   }
 
   // Escritura: fuente, lección, asociación, bloque y ubicación.

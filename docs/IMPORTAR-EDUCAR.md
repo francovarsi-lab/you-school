@@ -52,58 +52,19 @@ Van también a **a revisar** las fichas que:
 - Si el autor es una persona (no el Ministerio), la atribución va en la descripción de la lección: "Autor: Nombre, vía Educ.ar."
 - El modelo de datos no tiene un campo de atribución. Por eso queda en la descripción, que **no se muestra en la página pública**. Para verla en el sitio hace falta un cambio de esquema o de la página, y eso necesita tu autorización.
 
-### Ajustes de título
+### Ajustes por ficha
 
-`database/importar/ajustes.json` fija el título de una ficha. La clave es el número de la ficha de Educ.ar:
+`database/importar/ajustes.json` fija el título y la descripción de una ficha. La clave es el número de la ficha de Educ.ar:
 
 ```json
 {
-  "125633": { "titulo": "Fracciones: suma y resta" }
+  "125633": {
+    "titulo": "Fracciones: suma y resta",
+    "descripcion": "Video para repasar las fracciones, con la suma y la resta."
+  }
 }
 ```
 
-## 3. Aplicar
-
-Cuando el simulacro esté bien, ejecutá:
-
-```bash
-node database/import-educar.js --aplicar
-```
-
-Eso crea las lecciones en Directus. Todas quedan en **borrador**, así que no aparecen en el sitio público.
-
-## 4. Revisar y publicar en Directus
-
-1. Abrí **http://localhost:8055** (Directus tiene que estar corriendo).
-2. Entrá a **lecciones**.
-3. Revisá título, descripción, conocimiento y ubicación de cada lección nueva.
-4. Para publicar varias a la vez: marcá las casillas de las lecciones, elegí **cambiar estado** y poné **publicado**.
-5. Confirmá en **https://you-school.vercel.app/estudiar** que aparecen en el tema correcto.
-
-## 5. Publicar con el comando
-
-Hay un comando para publicar lecciones por su número de ficha (el ID que aparece en el link de Educ.ar, por ejemplo `155979`). Antes de publicar, revisa cada lección: fuente, licencia, ubicación, conocimiento y que el video responda. Si algo falla, no publica esa lección y dice el motivo.
-
-Simulacro (no escribe nada):
-
-```bash
-node database/publicar-lecciones.js --ids=155979,155971
-```
-
-Publicar de verdad:
-
-```bash
-node database/publicar-lecciones.js --ids=155979,155971 --aplicar
-```
-
-Volver a borrador (para ocultar lecciones):
-
-```bash
-node database/publicar-lecciones.js --ids=155979 --revertir --aplicar
-```
-
-Solo cambian las lecciones indicadas. El resto no se toca.
-
-## Riesgo
-
-Los videos viven en los servidores de Educ.ar. Si Educ.ar cambia la dirección de un video, esa lección deja de reproducirse. El sitio no lo detecta solo: hay que revisar las lecciones de educ.ar de vez en cuando y, si un video no anda, corregir su referencia o despublicar la lección.
+- Si hay `descripcion`, reemplaza la de Educ.ar. La descripción final queda así: esa frase, y al final "Autor: Nombre, vía Educ.ar.".
+- Si no hay `descripcion` y la de Educ.ar menciona juegos o actividades ("juego", "poné a prueba", "actividades interactivas"), el simulacro muestra una **ADVERTENCIA**. Conviene agregar una descripción aprobada antes de aplicar.
+- Las cinco lecciones del lote de Matemática ya tienen su descripción aprobada en este archivo, para que una reimportación no la pise.
