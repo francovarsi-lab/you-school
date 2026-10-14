@@ -37,3 +37,8 @@ La regla del importador excluye fichas con esas palabras. Estas seis ya están c
 | **Los ángulos y su medición** (cargada, borrador) | El autor de la ficha es Educ.ar, no una persona, así que la descripción no lleva la línea "Autor: …". | ¿Se agrega igual la atribución a Educ.ar, o se deja así? |
 | **Fuentes candidatas** | Ver [docs/fuentes-candidatas.md](fuentes-candidatas.md). Pakapaka y Canal Encuentro quedaron sin licencia verificada. | ¿Se buscan más fuentes, o se contacta a Educ.ar sobre el scraping antes de automatizar el descubrimiento? |
 | **Vista previa** | El servidor de desarrollo que ya estaba corriendo en el puerto 3000 no tiene las credenciales de Directus, así que `/preview` muestra el mensaje de "faltan credenciales". | Agregar `DIRECTUS_EMAIL` y `DIRECTUS_PASSWORD` en `.env.local` y reiniciar ese servidor. |
+
+## 5. Decisiones del 14 de octubre
+
+- **Cuadriláteros (ficha 127249): descartada.** Duplica el contenido de "Mirá: cuadriláteros" (125632), ya cargada. No se importa.
+- **Descubridor automático de fichas de Educ.ar: no se hace** hasta tener permiso explícito de Educ.ar. Sus términos mencionan restricciones de scraping que solo exceptúan el material con licencia abierta.

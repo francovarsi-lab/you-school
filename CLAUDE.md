@@ -28,6 +28,7 @@ Reglas:
 - La clave secreta/service key nunca va al frontend. Solo la clave pública `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 - No commitear `.env*` ni `database/backups/` (ya están en `.gitignore`).
 - Sin credenciales ni claves en archivos versionados. Los scripts leen `directus-admin/.env` sin imprimirlo.
+- Khan Academy (fuente preparada, sin videos importados): solo videos hechos por Khan Academy, no los de socios; sin publicidad ni cobro; sin sugerir aval de Khan Academy; con atribución y enlace a www.khanacademy.org (la lección lo muestra junto a la fuente). Licencia CC BY-NC-SA.
 - Importador de Educ.ar (`database/import-educar.js`): solo entran fichas de video con audiencia Estudiantes o General, sin "recorte" ni "fragmento" en título o descripción. Docentes-only o sin audiencia van a "a revisar"; otros formatos (Interactivo, Juego, Libro electrónico) quedan aparte sin importarse.
 - Ajustes por ficha (`database/importar/ajustes.json`): título y descripción aprobados, por número de ficha. Si la descripción de Educ.ar menciona juegos o actividades y no hay ajuste, el simulacro advierte.
 - Chequeo de videos: `node database/chequear-videos.js` (solo lectura). Reporte en `docs/reporte-videos.md`.
