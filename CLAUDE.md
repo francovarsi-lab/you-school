@@ -19,6 +19,7 @@ Dónde vive cada cosa:
 - Admin: Directus en Docker, carpeta `directus-admin/`, puerto 8055. Credenciales en `directus-admin/.env` (no versionado).
 - Video: se guarda como referencia abstracta en `bloques_contenido.referencia`. Formatos: `youtube:ID` (iframe) y `educar:URL` (MP4 de educ.ar, solo host `educar.arsat.com.ar`, reproductor nativo). Solo `src/lib/video.ts` conoce los proveedores.
 - Keepalive: `src/app/api/keepalive/route.ts` + cron diario en `vercel.json`, para que Supabase free no se pause.
+- Vista previa de borradores: `/preview` y `/preview/leccion/[id]`. Solo local: en producción dan 404. Leen de Directus desde el servidor con `DIRECTUS_EMAIL` y `DIRECTUS_PASSWORD` de `.env.local` (sin prefijo `NEXT_PUBLIC_`).
 
 Reglas:
 - El contenido se carga SIEMPRE por la API de Directus o por su panel. Nunca SQL directo a Supabase para contenido.
@@ -28,6 +29,9 @@ Reglas:
 - No commitear `.env*` ni `database/backups/` (ya están en `.gitignore`).
 - Sin credenciales ni claves en archivos versionados. Los scripts leen `directus-admin/.env` sin imprimirlo.
 - Importador de Educ.ar (`database/import-educar.js`): solo entran fichas de video con audiencia Estudiantes o General, sin "recorte" ni "fragmento" en título o descripción. Docentes-only o sin audiencia van a "a revisar"; otros formatos (Interactivo, Juego, Libro electrónico) quedan aparte sin importarse.
+- Ajustes por ficha (`database/importar/ajustes.json`): título y descripción aprobados, por número de ficha. Si la descripción de Educ.ar menciona juegos o actividades y no hay ajuste, el simulacro advierte.
+- Chequeo de videos: `node database/chequear-videos.js` (solo lectura). Reporte en `docs/reporte-videos.md`.
+- Guía para revisar y publicar lecciones: `docs/GUIA-REVISION.md`. Pendientes de decisión: `docs/revision-pendiente.md`.
 
 Lo aprendido (gotchas):
 - El entorno es Windows, con Claude Code en la app de escritorio. Los comandos se ejecutan con Git Bash.
