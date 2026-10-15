@@ -52,3 +52,9 @@ Detalle en [docs/auditoria-contenido.md](auditoria-contenido.md). Se publicaron 
 - **Borradores largos (10 a 15 min):** las que dan más de 10 min quedan a la espera de decisión.
 - **Sin dato:** "TIPOS DE FRACCIONES" (YouTube) y "Introducción a las fracciones" (sin video).
 - **Los ángulos y su medición** pasó con 9.95 min y su descripción aprobada. Su ficha original dice "capítulo", así que si se reimporta sin ajuste, el importador la marcaría como formato TV.
+
+## 7. Áreas y perímetros pasó a borrador (15 de octubre)
+
+- **Lección:** "Áreas y perímetros de cuerpos y figuras planas" (`18a7871e-998f-4c89-bef0-06d30c83d0f6`).
+- **Motivo:** es una serie de TV de 15,6 min, más de los 10 min permitidos. Pasó a borrador por API de Directus, con respaldo previo en `database/backups/`.
+- **Qué falta decidir:** si se recorta a una clase corta, si se reemplaza por otro video, o si se deja en borrador.
