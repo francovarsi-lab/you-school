@@ -4,6 +4,7 @@
 // y escribe el reporte en consola y en docs/reporte-videos.md. Un pedido por segundo.
 const fs = require('fs');
 const path = require('path');
+const { duracionMp4 } = require('./duracion-video.js');
 
 const DIRECTUS = 'http://localhost:8055';
 const ENV_FILE = path.join(__dirname, '..', '..', 'directus-admin', '.env');
@@ -78,8 +79,16 @@ async function verificar(referencia) {
   const sep = referencia.indexOf(':');
   const prefijo = sep === -1 ? referencia : referencia.slice(0, sep);
   const valor = sep === -1 ? '' : referencia.slice(sep + 1);
-  if (prefijo === 'youtube') return { tipo: 'youtube', ...(await verificarYouTube(valor)) };
-  if (prefijo === 'educar') return { tipo: 'educar (MP4)', ...(await verificarMp4(valor)) };
+  if (prefijo === 'youtube') return { tipo: 'youtube', ...(await verificarYouTube(valor)), minutos: null };
+  if (prefijo === 'educar') {
+    const r = await verificarMp4(valor);
+    // Duración leída del encabezado del MP4; solo si el video responde.
+    let minutos = null;
+    if (r.estado === 'ok') {
+      try { await sleep(1000); minutos = (await duracionMp4(valor)) / 60; } catch { minutos = null; }
+    }
+    return { tipo: 'educar (MP4)', ...r, minutos };
+  }
   return { tipo: prefijo || '(vacío)', estado: 'roto', motivo: `prefijo de video desconocido: "${prefijo}"` };
 }
 
@@ -108,12 +117,12 @@ async function main() {
   for (const l of lecciones) {
     const videos = porLeccion.get(l.id) ?? [];
     if (videos.length === 0) {
-      filas.push({ leccion: l.titulo, id: l.id, estado_leccion: l.estado, tipo: '—', estado: 'sin video', motivo: 'la lección no tiene bloques de video' });
+      filas.push({ leccion: l.titulo, id: l.id, estado_leccion: l.estado, tipo: '—', estado: 'sin video', motivo: 'la lección no tiene bloques de video', minutos: null });
       continue;
     }
     for (const v of videos) {
       const r = await verificar(v.referencia);
-      filas.push({ leccion: l.titulo, id: l.id, estado_leccion: l.estado, tipo: r.tipo, estado: r.estado, motivo: r.motivo });
+      filas.push({ leccion: l.titulo, id: l.id, estado_leccion: l.estado, tipo: r.tipo, estado: r.estado, motivo: r.motivo, minutos: r.minutos });
       console.log(`${r.estado.padEnd(14)} ${r.tipo.padEnd(12)} ${l.titulo.slice(0, 50)}`);
     }
   }
@@ -126,9 +135,9 @@ async function main() {
     '',
     `Lecciones revisadas: ${lecciones.length}. Videos verificados: ${filas.length}. ok: ${cuenta('ok')}. roto: ${cuenta('roto')}. no verificable: ${cuenta('no verificable')}. sin video: ${cuenta('sin video')}.`,
     '',
-    '| Lección | id | Estado de la lección | Tipo | Resultado | Motivo |',
-    '|---|---|---|---|---|---|',
-    ...filas.map((f) => `| ${esc(f.leccion)} | \`${f.id}\` | ${f.estado_leccion} | ${esc(f.tipo)} | ${f.estado} | ${esc(f.motivo)} |`),
+    '| Lección | id | Estado de la lección | Tipo | Duración | Resultado | Motivo |',
+    '|---|---|---|---|---|---|---|',
+    ...filas.map((f) => `| ${esc(f.leccion)} | \`${f.id}\` | ${f.estado_leccion} | ${esc(f.tipo)} | ${f.minutos == null ? 'sin dato' : f.minutos.toFixed(1) + ' min'} | ${f.estado} | ${esc(f.motivo)} |`),
     '',
   ].join('\n');
   fs.writeFileSync(SALIDA, md, 'utf-8');

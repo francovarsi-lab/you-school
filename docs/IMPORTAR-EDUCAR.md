@@ -40,6 +40,11 @@ node database/import-educar.js
    - **a revisar**: la audiencia de la ficha no incluye "Estudiantes" ni "General" (solo "Docentes", o no indica audiencia). No se importa hasta que alguien lo decida; aparece en una lista aparte.
    - **otro formato**: la ficha no es un video (Interactivo, Juego, Libro electrónico, etc.). No se importa; aparece en una lista aparte.
 
+Además:
+- **a revisar (formato TV):** el título o la descripción habla de conductores, programa, entrevista, charla, capítulo, episodio o "conversan". Una lección es una clase de teoría.
+- **a revisar (largo):** el video dura más de 10 minutos. La duración se lee del encabezado del MP4, sin descargarlo.
+- **excluida (programa):** el video dura más de 20 minutos.
+
 Solo se importan fichas de **video**, con audiencia **Estudiantes** o **General**, y sin "recorte" ni "fragmento".
 
 Van también a **a revisar** las fichas que:
