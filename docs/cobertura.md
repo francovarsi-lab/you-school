@@ -27,7 +27,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 3er grado | Educación Tecnológica | 0 | 0 |
 | 3er grado | Formación Ética y Ciudadana | 0 | 0 |
 | 3er grado | Lengua | 0 | 0 |
-| 3er grado | Matemática | 0 | 1 |
+| 3er grado | Matemática | 1 | 0 |
 | 4to grado | Ciencias Naturales | 1 | 4 |
 | 4to grado | Ciencias Sociales | 0 | 2 |
 | 4to grado | Educación Artística | 0 | 0 |
@@ -35,7 +35,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 4to grado | Educación Tecnológica | 0 | 0 |
 | 4to grado | Formación Ética y Ciudadana | 0 | 0 |
 | 4to grado | Lengua | 1 | 5 |
-| 4to grado | Matemática | 3 | 7 |
+| 4to grado | Matemática | 4 | 6 |
 | 5to grado | Ciencias Naturales | 0 | 0 |
 | 5to grado | Ciencias Sociales | 0 | 0 |
 | 5to grado | Educación Artística | 0 | 0 |
@@ -43,7 +43,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 5to grado | Educación Tecnológica | 0 | 0 |
 | 5to grado | Formación Ética y Ciudadana | 0 | 0 |
 | 5to grado | Lengua | 0 | 0 |
-| 5to grado | Matemática | 0 | 2 |
+| 5to grado | Matemática | 2 | 0 |
 | 6to grado | Ciencias Naturales | 0 | 0 |
 | 6to grado | Ciencias Sociales | 0 | 0 |
 | 6to grado | Educación Artística | 0 | 0 |
@@ -51,7 +51,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 6to grado | Educación Tecnológica | 0 | 0 |
 | 6to grado | Formación Ética y Ciudadana | 0 | 0 |
 | 6to grado | Lengua | 0 | 0 |
-| 6to grado | Matemática | 0 | 1 |
+| 6to grado | Matemática | 1 | 0 |
 | 7mo grado | Ciencias Naturales | 0 | 0 |
 | 7mo grado | Ciencias Sociales | 0 | 0 |
 | 7mo grado | Educación Artística | 0 | 0 |
@@ -114,8 +114,8 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 |---|---|---|---|
 | 1er grado | 0 | 10 | 4 de 8 |
 | 2do grado | 0 | 0 | 0 de 8 |
-| 3er grado | 0 | 6 | 2 de 8 |
-| 4to grado | 5 | 18 | 4 de 8 |
-| 5to grado | 0 | 2 | 1 de 8 |
-| 6to grado | 0 | 1 | 1 de 8 |
+| 3er grado | 1 | 5 | 2 de 8 |
+| 4to grado | 6 | 17 | 4 de 8 |
+| 5to grado | 2 | 0 | 1 de 8 |
+| 6to grado | 1 | 0 | 1 de 8 |
 | 7mo grado | 0 | 0 | 0 de 8 |
