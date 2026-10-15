@@ -9,6 +9,7 @@ Principios:
 - Una lección es contenido reutilizable. Su ubicación curricular es una relación, no una propiedad.
 - El sitio crece agregando contenido, no modificando código.
 - El contenido se administra sin tocar el frontend.
+- Una lección = una clase de teoría: un concepto, explicación directa al alumno, corta. Nada de programas de TV con conductores, entrevistas ni charlas. Lo práctico va en ejercicios.
 - YOU SCHOOL se construye para el alumno que quiere estudiar, no para el docente. Una lección pública debe: 1) estar dirigida al alumno, 2) enseñar un concepto concreto y tener un título que lo diga, 3) entenderse sola, 4) encajar en un tema del currículo. El material pensado para docentes no va (para eso existe Educ.ar).
 
 Usuario: no es programador y habla español rioplatense. Explicar brevemente antes de ejecutar. No dar nada por resuelto hasta que lo confirme en el navegador. Nunca pedir ni mostrar contraseñas.
@@ -32,6 +33,7 @@ Reglas:
 - Importador de Educ.ar (`database/import-educar.js`): solo entran fichas de video con audiencia Estudiantes o General, sin "recorte" ni "fragmento" en título o descripción. Docentes-only o sin audiencia van a "a revisar"; otros formatos (Interactivo, Juego, Libro electrónico) quedan aparte sin importarse.
 - Ajustes por ficha (`database/importar/ajustes.json`): título y descripción aprobados, por número de ficha. Si la descripción de Educ.ar menciona juegos o actividades y no hay ajuste, el simulacro advierte.
 - Chequeo de videos: `node database/chequear-videos.js` (solo lectura). Reporte en `docs/reporte-videos.md`.
+- Auditoría de contenido: `node database/auditoria-contenido.js` (solo lectura): duración, señales de TV y veredicto por lección, en `docs/auditoria-contenido.md`. Publicar solo lo que pasa: duración hasta 10 min, sin señales de TV, audiencia Estudiantes o General, con conocimiento y ubicación.
 - Guía para revisar y publicar lecciones: `docs/GUIA-REVISION.md`. Pendientes de decisión: `docs/revision-pendiente.md`. Fuentes candidatas con licencias verificadas: `docs/fuentes-candidatas.md`. Cobertura por grado y materia (`node database/reporte-cobertura.js`, solo lectura): `docs/cobertura.md`. Idea futura "Ir al colegio" (días de clase; requiere cambio de esquema y autorización): `docs/ideas.md`.
 
 Lo aprendido (gotchas):

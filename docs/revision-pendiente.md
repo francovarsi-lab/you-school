@@ -42,3 +42,13 @@ La regla del importador excluye fichas con esas palabras. Estas seis ya están c
 
 - **Cuadriláteros (ficha 127249): descartada.** Duplica el contenido de "Mirá: cuadriláteros" (125632), ya cargada. No se importa.
 - **Descubridor automático de fichas de Educ.ar: no se hace** hasta tener permiso explícito de Educ.ar. Sus términos mencionan restricciones de scraping que solo exceptúan el material con licencia abierta.
+
+## 6. Auditoría de contenido (15 de octubre)
+
+Detalle en [docs/auditoria-contenido.md](auditoria-contenido.md). Se publicaron seis lecciones que pasaron el filtro (duración hasta 10 min, sin señales de TV, audiencia Estudiantes o General, un conocimiento y una ubicación).
+
+- **Publicada que no pasa, no se despublicó:** "Áreas y perímetros de cuerpos y figuras planas" dura 15.6 min. ¿Se recorta, se reemplaza o se deja?
+- **Probables programas (borrador):** "La receta de mazamorra…" y "Sentidos de la multiplicación…" dicen "conductores". ¿Se revisan a mano?
+- **Borradores largos (10 a 15 min):** las que dan más de 10 min quedan a la espera de decisión.
+- **Sin dato:** "TIPOS DE FRACCIONES" (YouTube) y "Introducción a las fracciones" (sin video).
+- **Los ángulos y su medición** pasó con 9.95 min y su descripción aprobada. Su ficha original dice "capítulo", así que si se reimporta sin ajuste, el importador la marcaría como formato TV.
