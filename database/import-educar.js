@@ -87,10 +87,10 @@ function motivoExcluir(ficha) {
 }
 
 // Solo entran fichas con audiencia Estudiantes o General. El resto se revisa a mano.
-function motivoRevisar(ficha) {
+function motivoRevisar(ficha, aprobada) {
   if (/archivo educ\.ar/i.test(ficha.texto)) return 'la ficha tiene el aviso "Archivo educ.ar" (recurso desactualizado)';
   // Programas de TV, charlas o entrevistas: una lección es una clase de teoría (ver CLAUDE.md).
-  if (/\b(conductor(es)?|programa|entrevista|charla|capitulo|episodio|conversan)\b/.test(sinTildes(`${ficha.titulo} ${ficha.descripcion}`))) {
+  if (!aprobada && /\b(conductor(es)?|programa|entrevista|charla|capitulo|episodio|conversan)\b/.test(sinTildes(`${ficha.titulo} ${ficha.descripcion}`))) {
     return 'formato TV: título o descripción habla de conductores, programa, entrevista, charla, capítulo, episodio o conversan';
   }
   if (/mirar\s+(especialmente\s+)?(desde|solo|sólo)\b/i.test(ficha.texto)) return 'la ficha recomienda mirar solo un tramo del video';
@@ -229,7 +229,7 @@ async function procesarLinea(linea, numero, idiomaId) {
   const exclusion = motivoExcluir(ficha);
   if (exclusion) return { resultado: 'excluida', motivo: exclusion };
   if (ficha.formato !== 'Video') return { resultado: 'otro formato', motivo: `formato "${ficha.formato ?? 'sin formato'}": no se importa` };
-  const revisar = motivoRevisar(ficha);
+  const revisar = motivoRevisar(ficha, ajuste.aprobada === true);
   if (revisar) return { resultado: 'a revisar', motivo: revisar };
 
   const lic = licenciaCC(ficha.licencia);
@@ -238,9 +238,12 @@ async function procesarLinea(linea, numero, idiomaId) {
   const v = await verificarMp4(ficha.mp4);
   if (!v.ok) return { resultado: 'rechazada', motivo: v.motivo };
   // Una lección es una clase corta: más de 10 min se revisa, más de 20 es un programa.
-  const minutos = (await duracionMp4(ficha.mp4)) / 60;
-  if (minutos > 20) return { resultado: 'excluida', motivo: `programa de ${minutos.toFixed(0)} min (más de 20)` };
-  if (minutos > 10) return { resultado: 'a revisar', motivo: `video largo: ${minutos.toFixed(1)} min (más de 10)` };
+  // "aprobada": true en ajustes.json saltea estos dos controles (ya revisada a mano).
+  if (ajuste.aprobada !== true) {
+    const minutos = (await duracionMp4(ficha.mp4)) / 60;
+    if (minutos > 20) return { resultado: 'excluida', motivo: `programa de ${minutos.toFixed(0)} min (más de 20)` };
+    if (minutos > 10) return { resultado: 'a revisar', motivo: `video largo: ${minutos.toFixed(1)} min (más de 10)` };
+  }
 
   const slug = slugify(ficha.titulo);
   const yaExisteSlug = await buscar('lecciones', { slug }, 'id,slug');

@@ -1,26 +1,32 @@
 {
   "125631": {
     "titulo": "Tipos de triángulos y triángulo rectángulo",
-    "descripcion": "Video para repasar los tipos de triángulos y el triángulo rectángulo."
+    "descripcion": "Video para repasar los tipos de triángulos y el triángulo rectángulo.",
+    "aprobada": true
   },
   "125632": {
     "titulo": "Tipos de cuadriláteros y paralelogramos",
-    "descripcion": "Video para repasar los tipos de cuadriláteros y los paralelogramos."
+    "descripcion": "Video para repasar los tipos de cuadriláteros y los paralelogramos.",
+    "aprobada": true
   },
   "125633": {
     "titulo": "Fracciones: suma y resta",
-    "descripcion": "Video para repasar las fracciones, con la suma y la resta."
+    "descripcion": "Video para repasar las fracciones, con la suma y la resta.",
+    "aprobada": true
   },
   "125634": {
     "titulo": "Números naturales: recta numérica y operaciones",
-    "descripcion": "Video para repasar los números naturales, la recta numérica y las operaciones."
+    "descripcion": "Video para repasar los números naturales, la recta numérica y las operaciones.",
+    "aprobada": true
   },
   "125635": {
     "titulo": "Cómo resolver un problema: entender la consigna",
-    "descripcion": "Video sobre cómo entender la consigna antes de resolver un problema."
+    "descripcion": "Video sobre cómo entender la consigna antes de resolver un problema.",
+    "aprobada": true
   },
   "127875": {
     "titulo": "Los ángulos y su medición",
-    "descripcion": "Video para repasar los ángulos, cómo se miden y para qué sirve medirlos."
+    "descripcion": "Video para repasar los ángulos, cómo se miden y para qué sirve medirlos.",
+    "aprobada": true
   }
 }

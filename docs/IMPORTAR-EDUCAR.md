@@ -73,4 +73,5 @@ Van también a **a revisar** las fichas que:
 - Si hay `fuente` (por ejemplo, "Khan Academy"), la lección usa esa fuente en vez de Educ.ar. Si la fuente ya existe con otra licencia que la ficha, la línea se rechaza: no se mezclan licencias. `fuenteUrl` es opcional y fija la dirección de una fuente nueva.
 - Si hay `descripcion`, reemplaza la de Educ.ar. La descripción final queda así: esa frase, y al final "Autor: Nombre, vía Educ.ar.".
 - Si no hay `descripcion` y la de Educ.ar menciona juegos o actividades ("juego", "poné a prueba", "actividades interactivas"), el simulacro muestra una **ADVERTENCIA**. Conviene agregar una descripción aprobada antes de aplicar.
+- `"aprobada": true` salta los controles de formato TV y de duración. Se usa para fichas que ya se revisaron a mano (las seis publicadas el 15 de octubre). Los demás controles siguen.
 - Las cinco lecciones del lote de Matemática ya tienen su descripción aprobada en este archivo, para que una reimportación no la pise.
