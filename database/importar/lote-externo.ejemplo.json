@@ -1,0 +1,25 @@
+[
+  {
+    "url": "https://www.youtube.com/watch?v=AAAAAAAAAAA",
+    "titulo": "Ejemplo inventado: la suma de fracciones",
+    "descripcion": "Video para repasar la suma de fracciones con igual denominador.",
+    "fuente": "Khan Academy",
+    "grado": "5to grado",
+    "materia": "Matemática",
+    "unidad": "Números y operaciones",
+    "tema": "Fracciones",
+    "conocimiento": "Suma de fracciones"
+  },
+  {
+    "url": "https://youtu.be/BBBBBBBBBBB",
+    "titulo": "Ejemplo inventado: la resta de fracciones",
+    "descripcion": "Video para repasar la resta de fracciones.",
+    "fuente": "Khan Academy",
+    "grado": "5to grado",
+    "materia": "Matemática",
+    "unidad": "Números y operaciones",
+    "tema": "Fracciones",
+    "conocimiento": "Resta de fracciones",
+    "duracion_min": 4
+  }
+]
