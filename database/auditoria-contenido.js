@@ -76,7 +76,9 @@ async function main() {
     const audiencia = l.url_origen?.startsWith('https://www.educ.ar/') ? await audienciaDeFicha(l.url_origen) : null;
 
     let veredicto;
-    if (!video) veredicto = 'sin video';
+    const soloDocentes = Array.isArray(audiencia) && audiencia.length > 0 && !audiencia.some((a) => /estudiantes|general/i.test(a));
+    if (soloDocentes) veredicto = 'no pasa: docentes';
+    else if (!video) veredicto = 'sin video';
     else if (!ref.startsWith('educar:')) veredicto = 'sin dato (no es MP4 de educ.ar)';
     else if (minutos === null) veredicto = 'sin dato (no se pudo leer la duración)';
     else if (minutos > 20 || senales.some((s) => !s.startsWith('duración'))) veredicto = 'probable programa';
