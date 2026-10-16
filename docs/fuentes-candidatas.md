@@ -122,3 +122,7 @@ Fecha: 2026-10-16. Solo lectura. Fichas leídas una por una y simulacro con el i
 - La auditoría de contenido (`database/auditoria-contenido.js`) da "pasa" a lecciones con audiencia **Docentes** (17 de las 27 "pasa"). Esto contradice la regla de CLAUDE.md: solo se publica lo que es para Estudiantes o General. Conviene corregir el veredicto antes de publicar. No se cambió en esta tarea.
 - La ficha 40770 ("El ciclo del agua", Claves) tiene el mismo slug que una lección ya existente. Hay que ver cuál es antes de importarla.
 - Las fichas 40659 y 40763 dan error 500 en Educ.ar. Conviene reintentar más tarde.
+
+## Actualización (16 de octubre)
+
+Se creó el nivel Secundaria y el lote de Claves en un minuto - Biología quedó publicado (28 lecciones). Ver [docs/revision-pendiente.md](revision-pendiente.md), sección 8.

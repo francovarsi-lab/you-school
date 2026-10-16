@@ -4,6 +4,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 
 | Grado | Materia | Publicadas | Borrador |
 |---|---|---|---|
+| 1er año | Biología | 7 | 0 |
 | 1er grado | Ciencias Naturales | 0 | 2 |
 | 1er grado | Ciencias Sociales | 0 | 4 |
 | 1er grado | Educación Artística | 0 | 0 |
@@ -12,6 +13,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 1er grado | Formación Ética y Ciudadana | 0 | 0 |
 | 1er grado | Lengua | 0 | 2 |
 | 1er grado | Matemática | 0 | 2 |
+| 2do año | Biología | 3 | 0 |
 | 2do grado | Ciencias Naturales | 0 | 0 |
 | 2do grado | Ciencias Sociales | 0 | 0 |
 | 2do grado | Educación Artística | 0 | 0 |
@@ -20,6 +22,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 2do grado | Formación Ética y Ciudadana | 0 | 0 |
 | 2do grado | Lengua | 0 | 0 |
 | 2do grado | Matemática | 0 | 0 |
+| 3er año | Biología | 9 | 0 |
 | 3er grado | Ciencias Naturales | 0 | 0 |
 | 3er grado | Ciencias Sociales | 0 | 5 |
 | 3er grado | Educación Artística | 0 | 0 |
@@ -28,6 +31,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 3er grado | Formación Ética y Ciudadana | 0 | 0 |
 | 3er grado | Lengua | 0 | 0 |
 | 3er grado | Matemática | 1 | 0 |
+| 4to año | Biología | 3 | 0 |
 | 4to grado | Ciencias Naturales | 1 | 4 |
 | 4to grado | Ciencias Sociales | 0 | 2 |
 | 4to grado | Educación Artística | 0 | 0 |
@@ -36,6 +40,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 4to grado | Formación Ética y Ciudadana | 0 | 0 |
 | 4to grado | Lengua | 1 | 5 |
 | 4to grado | Matemática | 4 | 6 |
+| 5to año | Biología | 6 | 1 |
 | 5to grado | Ciencias Naturales | 0 | 0 |
 | 5to grado | Ciencias Sociales | 0 | 0 |
 | 5to grado | Educación Artística | 0 | 0 |
@@ -112,10 +117,15 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 
 | Grado | Lecciones publicadas | Lecciones en borrador | Materias con contenido |
 |---|---|---|---|
+| 1er año | 7 | 0 | 1 de 1 |
 | 1er grado | 0 | 10 | 4 de 8 |
+| 2do año | 3 | 0 | 1 de 1 |
 | 2do grado | 0 | 0 | 0 de 8 |
+| 3er año | 9 | 0 | 1 de 1 |
 | 3er grado | 1 | 5 | 2 de 8 |
+| 4to año | 3 | 0 | 1 de 1 |
 | 4to grado | 6 | 17 | 4 de 8 |
+| 5to año | 6 | 1 | 1 de 1 |
 | 5to grado | 2 | 0 | 1 de 8 |
 | 6to grado | 1 | 0 | 1 de 8 |
 | 7mo grado | 0 | 0 | 0 de 8 |
@@ -125,7 +135,7 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 Esta sección no la genera el script: si se vuelve a correr `reporte-cobertura.js`, se reescribe el archivo y hay que volver a agregarla.
 
 - Colección 128372 (Educ.ar): 19 fichas, ninguna es video. Pasan 0 videos. Ver `docs/fuentes-candidatas.md`.
-- Serie Claves en un minuto (Biología): 29 videos para Estudiantes pasarían los filtros, pero son de nivel Secundario. Secundaria no existe en Directus, así que no suma al piloto de primaria.
+- Serie Claves en un minuto (Biología, Secundaria): 28 lecciones publicadas el 16 de octubre. No suman al piloto de primaria.
 - Por eso el conteo de hoy no cambia la cobertura de arriba.
 
 Comparación para los grados con contenido (publicadas / borradores):
@@ -142,4 +152,4 @@ Comparación para los grados con contenido (publicadas / borradores):
 
 Antes del piloto, hace falta buscar videos de Ciencias Sociales para 4to. Las fuentes revisadas hoy no dieron ninguno.
 
-Nota: el conteo de "videos que pasan los filtros" por grado no sale directo de la auditoría. Su veredicto "pasa" no mira la audiencia (ver `docs/fuentes-candidatas.md`, pendientes). Por eso los números de esta tabla son de publicadas y borradores, no de videos aptos.
+Nota: la auditoría ya no da "pasa" a lecciones solo para docentes (corregido el 16 de octubre). El conteo por grado sigue siendo de publicadas y borradores, no de videos aptos.

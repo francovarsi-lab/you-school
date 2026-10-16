@@ -27,7 +27,7 @@ La regla del importador excluye fichas con esas palabras. Estas seis ya están c
 | Ficha | Motivo | Qué falta para importarla |
 |---|---|---|
 | https://www.educ.ar/recursos/152995/la-clase-del-d%C3%ADa:-la-proporcionalidad-directa (La clase del día: La proporcionalidad directa) | **A revisar**: tiene el aviso "Archivo educ.ar" (recurso desactualizado) y recomienda mirar solo un tramo del video (desde 5 min 43 s hasta 12 min 36 s). Además, el importador no encuentra un MP4 en la ficha. | Decidir si el contenido sigue vigente y si el tramo alcanza. Después, revisar el MP4 y agregar la línea a una lista. |
-| https://www.educ.ar/recursos/50794/proporcionalidad (Proporcionalidad, Canal Encuentro) | **Secundaria**: el año "1er año" no existe en Directus. Solo hay Primaria. | Crear en Directus el nivel Secundaria (en NAP Argentina), los años, la materia Matemática en cada año, y después la unidad, el tema y el conocimiento. |
+| https://www.educ.ar/recursos/50794/proporcionalidad (Proporcionalidad, Canal Encuentro) | **Secundaria**: el año "1er año" no existía en Directus. (Nivel Secundaria y años 1.º a 5.º creados el 16 de octubre.) | Falta la materia Matemática en cada año de Secundaria. Se crea solo cuando caiga una lección de Matemática. Después, la unidad, el tema y el conocimiento. |
 
 ## 4. Decisiones nuevas (13 de octubre)
 
@@ -58,3 +58,24 @@ Detalle en [docs/auditoria-contenido.md](auditoria-contenido.md). Se publicaron 
 - **Lección:** "Áreas y perímetros de cuerpos y figuras planas" (`18a7871e-998f-4c89-bef0-06d30c83d0f6`).
 - **Motivo:** es una serie de TV de 15,6 min, más de los 10 min permitidos. Pasó a borrador por API de Directus, con respaldo previo en `database/backups/`.
 - **Qué falta decidir:** si se recorta a una clase corta, si se reemplaza por otro video, o si se deja en borrador.
+
+## 8. Claves en un minuto - Biología, Secundaria (16 de octubre)
+
+Lote de la serie 150959 (Educ.ar, CC BY-NC-SA). Lista en `database/importar/lista-claves-biologia.txt`. Respaldo previo: `database/backups/pre-lote-claves-biologia-2026-10-16.json`.
+
+- **Estructura creada en Directus:** nivel Secundaria en NAP Argentina y años 1er a 5to año, con Biología en cada uno (las lecciones caen en los cinco).
+- **Publicadas (28):** fichas de video para Estudiantes, todas de 0,8 a 2,0 min. Pasan la auditoría.
+- **En borrador (1):** 40678 "El cuerpo como construcción histórica". Pasa los filtros, pero su descripción habla de perspectivas políticas, económicas y culturales sobre el cuerpo, no de un concepto de Biología. Decidir si se reescribe, se cambia de materia o se descarta.
+- **Excluidas (3):**
+  - 40770 "El ciclo del agua": audiencia solo Docentes. Además, su slug ya lo usa otra lección.
+  - 40659 "La mitosis": error 500 en Educ.ar.
+  - 40763 "Respuesta inflamatoria": error 500 en Educ.ar.
+- **Títulos cambiados con ajuste** (`database/importar/ajustes.json`): 40717 "Cambios físicos y químicos al cocinar los alimentos" y 40780 "Florentino Ameghino y la evolución humana". El resto usa el título de la ficha, porque ya dice el concepto.
+- **Años propuestos (decisión de Franco):** 1er año: transporte celular, biomoléculas, alimentos y biomateriales. 2do: fotosíntesis, agua en las plantas y ciclo del carbono. 3ro: ADN y expresión génica, división celular, reproducción humana y clonación. 4to: biodiversidad y evolución. 5to: hormonas, sistema nervioso, sangre y el cuerpo.
+- **Atribución:** en la descripción, "Autor: ..., vía Educ.ar", porque el autor es una persona (ver regla de atribución en `docs/IMPORTAR-EDUCAR.md`).
+
+## 9. Auditoría: docentes nunca pasan (16 de octubre)
+
+- `database/auditoria-contenido.js` ahora marca "no pasa: docentes" a toda lección con audiencia solo "Docentes". "Docentes + Estudiantes" sí puede pasar.
+- Antes, 17 lecciones de solo docentes figuraban como "pasa". Se corrigió el veredicto, no el contenido. Ninguna se despublicó: las publicadas ya eran para Estudiantes.
+- Después de la corrida, la auditoría dice: 71 lecciones, 39 pasan, 1 larga, 2 sin dato, 29 de docentes.

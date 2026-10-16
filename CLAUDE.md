@@ -47,8 +47,13 @@ Lo aprendido (gotchas):
 
 Estado y pendientes:
 - Confirmado: despliegue en Vercel desde master, variables de entorno, cron de keepalive y selector de Conocimientos en Directus.
-- Contenido: Argentina > NAP Argentina > Primaria (7 años con sus áreas) > materias de cada año. Lecciones de educ.ar (CC BY-NC-SA, MP4 del reproductor de educ.ar), cargadas desde `database/importar/lista.txt` y publicadas con `database/publicar-lecciones.js`.
-- Conteos al cierre: 35 lecciones publicadas y 1 en borrador (la de prueba de Daniel Carreón, de un tercero, que queda en borrador).
+- Contenido: Argentina > NAP Argentina > Primaria (7 años con sus áreas) y Secundaria (1er a 5to año; hoy solo Biología, creada donde cayeron lecciones) > materias de cada año.
+- Canales de contenido (cada uno con su regla):
+  - Educ.ar: videos de fichas `educ.ar` con licencia CC BY-NC-SA, cargados con `database/import-educar.js` desde una lista (simulacro primero). Se publican con `database/publicar-lecciones.js`.
+  - Khan Academy: fuente preparada, sin videos todavía. Reglas en la sección de arriba.
+  - Lecciones propias: texto escrito por el equipo, cargado por Directus. Misma regla: una clase corta para el alumno.
+- Auditoría: docentes solo nunca pasa; "Docentes + Estudiantes" sí puede pasar.
+- Conteos al cierre (16 de octubre): 38 lecciones publicadas y 33 en borrador (71 en total). Entre los borradores hay 29 de solo docentes, la ficha dudosa 40678 (ver `docs/revision-pendiente.md`, sección 8) y otras pendientes de decisión.
 - Navegación: "Anterior" y "Siguiente" siguen el orden del curso (orden de lección, tema y unidad dentro de la materia), con `?tema=<id>` en el enlace. Al final de la materia el enlace es "Volver a <Materia>".
 - Matemática 4to tiene dos unidades de números: "Números y operaciones" (Fracciones, Multiplicación, Proporcionalidad) y "Geometría y medida". La unidad "Números" se eliminó.
 - Lección "Introducción a las fracciones" (texto de prueba) quedó en borrador.
