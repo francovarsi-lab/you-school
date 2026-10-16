@@ -1,0 +1,33 @@
+# Claves en un minuto - Biología (colección 150959). Solo fichas de video para Estudiantes.
+# Excluidas: 40770 (solo docentes; su slug ya existe) y 40659 y 40763 (error 500 en Educ.ar).
+# Año según el tema de Biología (propuesta, ver docs/revision-pendiente.md).
+# FORMATO: URL | Año | Materia | Unidad | Tema | Conocimiento
+https://www.educ.ar/recursos/40657 | 1er año | Biología | La célula y sus procesos | Transporte celular | Transporte pasivo
+https://www.educ.ar/recursos/40658 | 1er año | Biología | La célula y sus procesos | Transporte celular | Transporte activo
+https://www.educ.ar/recursos/40715 | 1er año | Biología | La célula y sus procesos | Biomoléculas | Hidratos de carbono
+https://www.educ.ar/recursos/40756 | 1er año | Biología | La célula y sus procesos | Biomoléculas | Lípidos
+https://www.educ.ar/recursos/40716 | 1er año | Biología | La célula y sus procesos | Biomoléculas | Funciones enzimáticas
+https://www.educ.ar/recursos/40717 | 1er año | Biología | La célula y sus procesos | Alimentos | Cambios en los alimentos al cocinar
+https://www.educ.ar/recursos/40759 | 1er año | Biología | La célula y sus procesos | Biomateriales | Biomateriales
+https://www.educ.ar/recursos/40655 | 2do año | Biología | Plantas y ciclos de la materia | Fotosíntesis | Fotosíntesis
+https://www.educ.ar/recursos/40656 | 2do año | Biología | Plantas y ciclos de la materia | Agua en las plantas | La conducción del agua en las plantas
+https://www.educ.ar/recursos/40771 | 2do año | Biología | Plantas y ciclos de la materia | Ciclos biogeoquímicos | El ciclo del carbono
+https://www.educ.ar/recursos/40653 | 3er año | Biología | Genética y reproducción | ADN y expresión génica | Duplicación del ADN
+https://www.educ.ar/recursos/40654 | 3er año | Biología | Genética y reproducción | ADN y expresión génica | Traducción del ADN
+https://www.educ.ar/recursos/40762 | 3er año | Biología | Genética y reproducción | ADN y expresión génica | Transcripción del ADN
+https://www.educ.ar/recursos/40660 | 3er año | Biología | Genética y reproducción | División celular | La meiosis
+https://www.educ.ar/recursos/40661 | 3er año | Biología | Genética y reproducción | División celular | Crossing over
+https://www.educ.ar/recursos/40764 | 3er año | Biología | Genética y reproducción | Reproducción humana | La fecundación
+https://www.educ.ar/recursos/40662 | 3er año | Biología | Genética y reproducción | Reproducción humana | La ovulación
+https://www.educ.ar/recursos/40781 | 3er año | Biología | Genética y reproducción | Reproducción humana | El ciclo menstrual
+https://www.educ.ar/recursos/40776 | 3er año | Biología | Genética y reproducción | Biotecnología | La clonación
+https://www.educ.ar/recursos/40683 | 4to año | Biología | Evolución y biodiversidad | Biodiversidad | La biodiversidad
+https://www.educ.ar/recursos/40779 | 4to año | Biología | Evolución y biodiversidad | Evolución | La coevolución
+https://www.educ.ar/recursos/40780 | 4to año | Biología | Evolución y biodiversidad | Evolución | Florentino Ameghino y la evolución humana
+https://www.educ.ar/recursos/40671 | 5to año | Biología | Cuerpo humano | Hormonas | Las hormonas esteroides
+https://www.educ.ar/recursos/40767 | 5to año | Biología | Cuerpo humano | Hormonas | Las hormonas peptídicas
+https://www.educ.ar/recursos/40769 | 5to año | Biología | Cuerpo humano | Hormonas | La comunicación hormonal
+https://www.educ.ar/recursos/40765 | 5to año | Biología | Cuerpo humano | Sistema nervioso | El impulso nervioso
+https://www.educ.ar/recursos/40766 | 5to año | Biología | Cuerpo humano | Sistema nervioso | La sinapsis
+https://www.educ.ar/recursos/40663 | 5to año | Biología | Cuerpo humano | Sangre | Hemostasia
+https://www.educ.ar/recursos/40678 | 5to año | Biología | Cuerpo humano | Cuerpo y sociedad | El cuerpo como construcción histórica
