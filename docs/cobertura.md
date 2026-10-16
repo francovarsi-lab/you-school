@@ -119,3 +119,27 @@ Fecha: 2026-10-14. Reporte de solo lectura. Cuenta lecciones distintas por mater
 | 5to grado | 2 | 0 | 1 de 8 |
 | 6to grado | 1 | 0 | 1 de 8 |
 | 7mo grado | 0 | 0 | 0 de 8 |
+
+## Recomendación de piloto (2026-10-16, manual)
+
+Esta sección no la genera el script: si se vuelve a correr `reporte-cobertura.js`, se reescribe el archivo y hay que volver a agregarla.
+
+- Colección 128372 (Educ.ar): 19 fichas, ninguna es video. Pasan 0 videos. Ver `docs/fuentes-candidatas.md`.
+- Serie Claves en un minuto (Biología): 29 videos para Estudiantes pasarían los filtros, pero son de nivel Secundario. Secundaria no existe en Directus, así que no suma al piloto de primaria.
+- Por eso el conteo de hoy no cambia la cobertura de arriba.
+
+Comparación para los grados con contenido (publicadas / borradores):
+
+| Grado | Matemática | Ciencias Naturales | Lengua | Ciencias Sociales | Materias con alguna lección publicada |
+|---|---|---|---|---|---|
+| 4to grado | 4 / 6 | 1 / 4 | 1 / 5 | 0 / 2 | 3 de 4 |
+| 5to grado | 2 / 0 | 0 / 0 | 0 / 0 | 0 / 0 | 1 de 4 |
+| 3er grado | 1 / 0 | 0 / 0 | 0 / 0 | 0 / 5 | 1 de 4 |
+| 6to grado | 1 / 0 | 0 / 0 | 0 / 0 | 0 / 0 | 1 de 4 |
+| 1er grado | 0 / 2 | 0 / 2 | 0 / 2 | 0 / 4 | 0 de 4 |
+
+**Recomendación: 4to grado** (propuesta, falta confirmar). Sigue siendo el único con lecciones publicadas en tres materias. 1er grado tiene borradores en las cuatro, pero no publicó ninguna. Ningún grado completa hoy las cuatro con publicadas: Ciencias Sociales de 4to tiene 0 publicadas y 2 en borrador.
+
+Antes del piloto, hace falta buscar videos de Ciencias Sociales para 4to. Las fuentes revisadas hoy no dieron ninguno.
+
+Nota: el conteo de "videos que pasan los filtros" por grado no sale directo de la auditoría. Su veredicto "pasa" no mira la audiencia (ver `docs/fuentes-candidatas.md`, pendientes). Por eso los números de esta tabla son de publicadas y borradores, no de videos aptos.
