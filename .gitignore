@@ -45,3 +45,6 @@ database/backups/
 
 # reportes locales de revisión
 database/reportes/
+
+# auditoría generada (se regenera con el simulacro)
+database/importar/auditoria.json
