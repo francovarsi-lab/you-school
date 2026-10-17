@@ -70,3 +70,6 @@ Decisiones de lecciones propias (formato en `docs/bloques.md`):
 - Voz gratuita del navegador (SpeechSynthesis, es-AR). El texto siempre queda visible como respaldo.
 - Ilustraciones por clave: emojis ahora, SVG propios después (plan en `docs/estilo-visual.md`).
 - Sin rachas, puntos ni vidas. Sí devolución inmediata en los ejercicios.
+- Visor de bloques (`src/components/VisorBloques.tsx`, formato de bloques en `src/lib/bloques.ts`): solo para lecciones con `tipo_de_contenido = bloques`. Una pantalla por bloque. Sin progreso guardado todavía: el único punto para enchufarlo es `alResponder`.
+- Lección piloto: "Contamos del 1 al 10" (1er grado > Matemática), borrador, con autor "YOU SCHOOL (borrador escrito con IA, pendiente de revisión docente)". Se carga con `database/cargar-leccion-piloto.js` (idempotente). Se ve en `/preview/leccion/<id>` con Directus encendido, no en la web pública hasta que se publique.
+- Fuente "YOU SCHOOL" con licencia "CC BY-NC-SA 4.0" (tipo propia). Las lecciones propias muestran fuente, autor y licencia en el cierre y en `/creditos`.

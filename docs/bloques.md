@@ -22,11 +22,12 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 ### imagen
 
 ```json
-{ "tipo": "imagen", "url": "manzana", "descripcion": "Una manzana roja con una hoja verde." }
+{ "tipo": "imagen", "url": "manzana", "cantidad": 3, "descripcion": "Tres manzanas" }
 ```
 
 - `url`: en realidad es la **clave de ilustración** (por ejemplo `manzana`). Hoy se muestra su emoji. Más adelante, un SVG propio.
-- `descripcion`: **obligatoria** (accesibilidad). Si la clave no existe, se muestra solo esta descripción.
+- `cantidad` (opcional, por defecto 1): cuántas veces se dibuja la ilustración. Entre 1 y 20.
+- `descripcion`: **obligatoria** (accesibilidad). Se lee como nombre de la imagen. Si la clave no existe, se muestra solo esta descripción.
 
 ### audio
 
@@ -77,6 +78,17 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 ```
 
 - `elementos`: van **en el orden correcto**. El visor los mezcla al mostrarlos.
+
+## Cómo se muestran (visor)
+
+- Una pantalla por bloque, con "Atrás" y "Siguiente" y el indicador "3 de 8". Al final, una pantalla de cierre con fuente, autor y licencia, y el enlace a la clase siguiente si existe.
+- Las flechas del teclado también sirven para avanzar y retroceder.
+- Ningún avance se bloquea por fallar. Ni puntos, ni rachas, ni vidas, ni animaciones de premio.
+- `ejercicio_contar`: el alumno toca los objetos de a uno. Al terminar, aparece "¿Cuántos hay?" con tres opciones: la correcta y dos cercanas.
+- `ejercicio_ordenar`: los elementos aparecen mezclados. El alumno los toca en orden. Un toque incorrecto da "Probá de nuevo" y no penaliza.
+- `audio` y `texto`: el botón "Escuchar" aparece solo si el dispositivo tiene una voz en español. El texto siempre queda visible.
+- Un bloque con datos incompletos o desconocidos no rompe la lección: se muestra un aviso en su lugar.
+- Todavía no se guarda progreso. El visor tiene un único punto para enchufarlo después (`alResponder` en `src/components/VisorBloques.tsx`).
 
 ## Campos de la lección
 
