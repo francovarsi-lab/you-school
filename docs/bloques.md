@@ -1,6 +1,6 @@
 # Bloques de contenido de las lecciones propias
 
-Estado: formato acordado; el visor todavía no lo lee. Campos nuevos de la colección `lecciones` (ver "Campos de la lección"): pendientes de aplicar hasta que Franco confirme el cambio de esquema.
+Estado: formato acordado; el visor todavía no lo lee. Los campos `bloques`, `tipo_de_contenido` y `autor` de `lecciones` ya están creados (16 de octubre, respaldo en database/backups/pre-bloques-2026-10-17.json).
 
 Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto con `tipo`. El visor muestra los bloques en el orden de la lista.
 

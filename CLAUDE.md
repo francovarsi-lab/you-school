@@ -62,6 +62,8 @@ Estado y pendientes:
 - Pendiente: el diseño de /estudiar al llegar a un tema lo revisa el usuario.
 - Directus solo corre mientras la PC y Docker estén encendidos. Las lecciones públicas no dependen de Directus: se leen de Supabase.
 
+Campos de `lecciones` para lecciones propias (cambio de esquema aplicado con autorización de Franco; respaldo en `database/backups/pre-bloques-2026-10-17.json`): `bloques` (JSON, opcional, vacío por defecto), `tipo_de_contenido` (desplegable `video`/`bloques`, por defecto `video`) y `autor` (texto, opcional). El video sigue viviendo en `bloques_contenido`, así que una lección puede no tener video.
+
 Decisiones de lecciones propias (formato en `docs/bloques.md`):
 - Contenido propio con licencia CC BY-NC-SA 4.0. Fuente "YOU SCHOOL".
 - Primero 1er grado de Primaria. Inicial queda en la estructura, pero vacío.
