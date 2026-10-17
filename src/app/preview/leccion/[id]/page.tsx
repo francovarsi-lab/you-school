@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { directus } from '@/lib/directus';
 import { resolveVideoReference } from '@/lib/video';
 import MensajeDirectus from '../../_components/MensajeDirectus';
+import VisorBloques from '@/components/VisorBloques';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +13,10 @@ type Leccion = {
   descripcion: string | null;
   estado: string;
   url_origen: string | null;
-  fuente_id: { nombre: string; licencia: string | null } | null;
+  tipo_de_contenido: string | null;
+  bloques: unknown;
+  autor: string | null;
+  fuente_id: { nombre: string; url: string | null; licencia: string | null } | null;
 };
 type Bloque = { orden: number; tipo: string; referencia: string };
 type Ubicacion = {
@@ -30,7 +34,7 @@ export default async function PreviewLeccion({ params }: { params: Promise<{ id:
   let ubicaciones: Ubicacion[];
   try {
     const encontradas = await directus<Leccion[]>(
-      `/items/lecciones?filter[id][_eq]=${id}&limit=1&fields=id,titulo,descripcion,estado,url_origen,fuente_id.nombre,fuente_id.licencia`
+      `/items/lecciones?filter[id][_eq]=${id}&limit=1&fields=id,titulo,descripcion,estado,url_origen,tipo_de_contenido,bloques,autor,fuente_id.nombre,fuente_id.url,fuente_id.licencia`
     );
     leccion = encontradas[0];
     if (!leccion) notFound();
@@ -47,6 +51,7 @@ export default async function PreviewLeccion({ params }: { params: Promise<{ id:
   }
 
   const u = ubicaciones[0]?.tema_id;
+  const esBloques = leccion.tipo_de_contenido === 'bloques';
   const origen = leccion.url_origen ?? null;
 
   return (
@@ -68,6 +73,19 @@ export default async function PreviewLeccion({ params }: { params: Promise<{ id:
         <article className="bg-white rounded-lg shadow-lg p-4 md:p-8 mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 break-words">{leccion.titulo}</h1>
 
+          {esBloques ? (
+            <VisorBloques
+              bloques={leccion.bloques}
+              semilla={leccion.id}
+              cierre={{
+                fuente: leccion.fuente_id?.nombre ?? null,
+                fuenteHref: leccion.fuente_id?.url ?? null,
+                autor: leccion.autor,
+                licencia: leccion.fuente_id?.licencia ?? null,
+                siguiente: null,
+              }}
+            />
+          ) : (
           <div className="space-y-6">
             {bloques.map((b, i) => {
               if (b.tipo === 'video') {
@@ -113,14 +131,15 @@ export default async function PreviewLeccion({ params }: { params: Promise<{ id:
             })}
             {bloques.length === 0 && <p className="text-gray-700">Esta lección todavía no tiene contenido.</p>}
           </div>
+          )}
 
-          {leccion.descripcion && (
+          {!esBloques && leccion.descripcion && (
             <p className="mt-6 pt-4 border-t border-gray-300 text-gray-800 leading-relaxed whitespace-pre-wrap break-words">
               {leccion.descripcion}
             </p>
           )}
 
-          {leccion.fuente_id && (
+          {!esBloques && leccion.fuente_id && (
             <p className={`${leccion.descripcion ? 'mt-3' : 'mt-6 pt-4 border-t border-gray-300'} text-sm text-gray-800 break-words`}>
               Fuente:{' '}
               {origen ? (

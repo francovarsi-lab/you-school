@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { resolveVideoReference } from '@/lib/video';
+import VisorBloques from '@/components/VisorBloques';
 
 interface Bloque {
   orden: number;
@@ -42,6 +43,11 @@ interface LeccionData {
   fuente: Fuente | null;
   urlOrigen: string | null;
   bloques: Bloque[];
+  // Lecciones propias: contenido en pantallas (ver docs/bloques.md).
+  esBloques: boolean;
+  bloquesRaw: unknown;
+  autor: string | null;
+  siguienteLeccion: Enlace | null;
   crumbs: Crumb[];
   prev: Enlace | null;
   next: Enlace | null;
@@ -153,6 +159,9 @@ export default function LeccionPage() {
               descripcion,
               slug,
               estado,
+              tipo_de_contenido,
+              bloques,
+              autor,
               bloques_contenido ( orden, tipo, referencia ),
               url_origen,
               fuentes ( nombre, url, licencia )
@@ -254,7 +263,9 @@ export default function LeccionPage() {
         const volverMateria: Enlace = { href: `/estudiar?abrir=${materia.id}`, texto: `Volver a ${materia.nombre}` };
         const enlaceA = (e: Entrada, texto: string): Enlace => ({ href: `/leccion/${e.id}?tema=${e.temaId}`, texto });
         const prev = idx > 0 ? enlaceA(secuencia[idx - 1], '← Anterior') : volverMateria;
-        const next = idx >= 0 && idx < secuencia.length - 1 ? enlaceA(secuencia[idx + 1], 'Siguiente →') : volverMateria;
+        const hayNext = idx >= 0 && idx < secuencia.length - 1;
+        const next = hayNext ? enlaceA(secuencia[idx + 1], 'Siguiente →') : volverMateria;
+        const siguienteLeccion = hayNext ? enlaceA(secuencia[idx + 1], 'Ir a la clase siguiente') : null;
 
         let posicion: LeccionData['posicion'] = null;
         if (actual) {
@@ -269,6 +280,10 @@ export default function LeccionPage() {
           fuente: lec.fuentes ?? null,
           urlOrigen: lec.url_origen ?? null,
           bloques: [...(lec.bloques_contenido ?? [])].sort((a: Bloque, b: Bloque) => a.orden - b.orden),
+          esBloques: lec.tipo_de_contenido === 'bloques',
+          bloquesRaw: lec.bloques,
+          autor: lec.autor ?? null,
+          siguienteLeccion,
           crumbs,
           prev,
           next,
@@ -344,6 +359,19 @@ export default function LeccionPage() {
           )}
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 break-words">{leccion.titulo}</h1>
 
+          {leccion.esBloques ? (
+            <VisorBloques
+              bloques={leccion.bloquesRaw}
+              semilla={leccionId}
+              cierre={{
+                fuente: leccion.fuente?.nombre ?? null,
+                fuenteHref: leccion.fuente?.url ?? null,
+                autor: leccion.autor,
+                licencia: leccion.fuente?.licencia ?? null,
+                siguiente: leccion.siguienteLeccion,
+              }}
+            />
+          ) : (
           <div className="space-y-6">
             {leccion.bloques.map((b, i) => {
               if (b.tipo === 'video') {
@@ -370,14 +398,15 @@ export default function LeccionPage() {
               <p className="text-gray-700">Esta lección todavía no tiene contenido.</p>
             )}
           </div>
+          )}
 
-          {leccion.descripcion && (
+          {!leccion.esBloques && leccion.descripcion && (
             <p className="mt-6 pt-4 border-t border-gray-300 text-gray-800 leading-relaxed whitespace-pre-wrap break-words">
               {leccion.descripcion}
             </p>
           )}
 
-          {leccion.fuente && (
+          {!leccion.esBloques && leccion.fuente && (
             <p className={`${leccion.descripcion ? 'mt-3' : 'mt-6 pt-4 border-t border-gray-300'} text-sm text-gray-800 break-words`}>
               Fuente:{' '}
               {origen ? (
@@ -412,6 +441,7 @@ export default function LeccionPage() {
           )}
         </article>
 
+        {!leccion.esBloques && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             href={leccion.prev!.href}
@@ -426,6 +456,7 @@ export default function LeccionPage() {
             {leccion.next!.texto}
           </Link>
         </div>
+        )}
       </div>
     </div>
   );

@@ -36,6 +36,13 @@ export default function CreditosPage() {
           </p>
         </section>
 
+        <section aria-labelledby="propias" className="space-y-2">
+          <h2 id="propias" className="text-xl font-semibold">Lecciones propias</h2>
+          <p className="text-lg break-words">
+            Las lecciones escritas por YOU SCHOOL tienen fuente YOU SCHOOL y se publican bajo licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 (CC BY-NC-SA 4.0). Cada lección indica su autor al final.
+          </p>
+        </section>
+
         {contacto && (
           <section aria-labelledby="correcciones" className="space-y-2">
             <h2 id="correcciones" className="text-xl font-semibold">Correcciones y retiros</h2>
