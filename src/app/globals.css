@@ -40,3 +40,16 @@ body {
     outline-offset: 2px;
   }
 }
+
+/* Salto al tocar un objeto. Sin movimiento si el sistema pide reducir animaciones. */
+@keyframes salto {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-14px); }
+  100% { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .salto {
+    animation: salto 300ms ease-out;
+  }
+}

@@ -28,6 +28,7 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 - `url`: en realidad es la **clave de ilustración** (por ejemplo `manzana`). Hoy se muestra su emoji. Más adelante, un SVG propio.
 - `cantidad` (opcional, por defecto 1): cuántas veces se dibuja la ilustración. Entre 1 y 20.
 - `descripcion`: **obligatoria** (accesibilidad). Se lee como nombre de la imagen. Si la clave no existe, se muestra solo esta descripción.
+- Es interactivo: cada objeto se toca, hace un pequeño salto, dice su número en voz y suma al contador "Contados: 2 de 3". Con "prefers-reduced-motion" activo, no hay salto.
 
 ### audio
 
@@ -35,9 +36,20 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 { "tipo": "audio", "texto": "Las plantas fabrican su alimento con luz." }
 ```
 
-- En esta etapa se lee con la voz del navegador (SpeechSynthesis, idioma es-AR). Es gratis.
+- Si el bloque tiene `audio` (clave del archivo pregrabado, por ejemplo `"audio": "frase-despues-del-6"`), el botón "Escuchar" suena `public/audio/frase-despues-del-6.mp3`. Si no hay archivo, usa la voz del navegador (SpeechSynthesis, es-AR; si no hay voz en español, el botón no aparece).
 - El texto siempre queda visible como respaldo.
 - Más adelante puede ser un archivo de audio.
+
+### numero
+
+```json
+{ "tipo": "numero", "valor": 7, "objeto": "estrella" }
+```
+
+- `valor`: entero de 0 a 20. Se muestra grande.
+- Al tocarlo suena su nombre (`public/audio/numero-7.mp3`, "siete") y aparecen 7 objetos, que también se tocan de a uno (salto, número en voz, contador).
+- `objeto` (opcional, por defecto `estrella`): clave de ilustración de los objetos.
+- Con `valor` 0, aparece "No hay objetos."
 
 ### ejercicio_opciones
 
@@ -52,6 +64,7 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 ```
 
 - `correcta`: índice (desde 0) de la opción correcta en `opciones`.
+- `audio` (opcional): clave del archivo pregrabado de la explicación. Aparece el botón "Escuchar" después del acierto.
 
 ### ejercicio_contar
 
@@ -89,6 +102,14 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 - `audio` y `texto`: el botón "Escuchar" aparece solo si el dispositivo tiene una voz en español. El texto siempre queda visible.
 - Un bloque con datos incompletos o desconocidos no rompe la lección: se muestra un aviso en su lugar.
 - Todavía no se guarda progreso. El visor tiene un único punto para enchufarlo después (`alResponder` en `src/components/VisorBloques.tsx`).
+
+## Audio y sonidos
+
+- **Archivos pregrabados** en `public/audio/`, con nombre por clave: `numero-0.mp3` a `numero-20.mp3` (los nombres de los números), y las frases con su clave (`frase-....mp3`). Se generan una sola vez en local con `database/generar-audio.py` (Piper, voz es_AR).
+- Al abrir una lección se precargan los archivos que usa. Si falta un archivo, se usa la voz del navegador como respaldo.
+- **Sonidos de acierto y error:** tonos generados en el navegador (sin archivos). Suenan en las opciones, en el conteo y en el orden.
+- **Silenciar:** el botón "Silenciar sonidos" (visible arriba de cada pantalla) apaga todos los sonidos y los audios. Vuelve a activarse con "Activar sonidos".
+- Cada toque de un objeto o de un número dice el número. En "ejercicio_ordenar", un acierto dice el número y un error suena el tono de error.
 
 ## Campos de la lección
 

@@ -2,6 +2,7 @@
 // Por la API de Directus. Idempotente: si ya existe el slug, no crea nada.
 // Uso: node database/cargar-leccion-piloto.js            -> simulacro (no escribe)
 //      node database/cargar-leccion-piloto.js --aplicar  -> escribe
+//      node database/cargar-leccion-piloto.js --aplicar --actualizar-bloques  -> reemplaza los bloques si ya existe
 const fs = require('fs');
 const path = require('path');
 
@@ -35,14 +36,14 @@ const SLUG = 'contamos-del-1-al-10';
 const FUENTE = { nombre: 'YOU SCHOOL', tipo: 'propia', url: 'https://you-school.vercel.app', licencia: 'CC BY-NC-SA 4.0' };
 const AUTOR = 'YOU SCHOOL (borrador escrito con IA, pendiente de revisión docente)';
 const BLOQUES = [
-  { tipo: 'texto', contenido: 'Contar es decir cuántas cosas hay. Hoy vamos a contar del 1 al 10.' },
-  { tipo: 'imagen', url: 'manzana', cantidad: 3, descripcion: 'Tres manzanas' },
-  { tipo: 'texto', contenido: 'Hay tres manzanas. Las contamos así: uno, dos, tres.' },
+  { tipo: 'numero', valor: 1, objeto: 'manzana' },
+  { tipo: 'numero', valor: 2, objeto: 'manzana' },
+  { tipo: 'numero', valor: 3, objeto: 'manzana' },
   { tipo: 'ejercicio_contar', pregunta: 'Tocá cada estrella para contarla.', objeto: 'estrella', cantidad: 5 },
-  { tipo: 'ejercicio_opciones', pregunta: '¿Qué número viene después del 6?', opciones: ['5', '7', '8'], correcta: 1, explicacion: 'Después del 6 viene el 7. Contamos: cinco, seis, siete.' },
+  { tipo: 'ejercicio_opciones', pregunta: '¿Qué número viene después del 6?', opciones: ['5', '7', '8'], correcta: 1, explicacion: 'Después del 6 viene el 7. Contamos: cinco, seis, siete.', audio: 'frase-despues-del-6' },
   { tipo: 'ejercicio_ordenar', consigna: 'Tocá los números de menor a mayor.', elementos: ['1', '2', '3', '4', '5'] },
   { tipo: 'ejercicio_contar', pregunta: 'Tocá cada pelota para contarla.', objeto: 'pelota', cantidad: 8 },
-  { tipo: 'texto', contenido: '¡Muy bien! Ya sabés contar objetos hasta el 10.' },
+  { tipo: 'ejercicio_opciones', pregunta: '¿Hasta qué número contamos hoy?', opciones: ['5', '10', '20'], correcta: 1, explicacion: 'Hoy contamos del 1 al 10.', audio: 'frase-hoy-contamos-del-1-al-10' },
 ];
 
 async function main() {
@@ -51,7 +52,16 @@ async function main() {
   TOKEN = (await login.json()).data.access_token;
 
   const existe = await buscar('lecciones', { slug: SLUG }, 'id,estado');
-  if (existe.length) { console.log(`Ya existe la lección ${SLUG} (${existe[0].estado}). No se crea nada.`); return; }
+  if (existe.length) {
+    // Con --actualizar-bloques, reemplaza solo los bloques de la lección existente.
+    if (APLICAR && process.argv.includes('--actualizar-bloques')) {
+      await api('PATCH', `/items/lecciones/${existe[0].id}`, { bloques: BLOQUES });
+      console.log(`Bloques de ${SLUG} actualizados (${BLOQUES.length}).`);
+      return;
+    }
+    console.log(`Ya existe la lección ${SLUG} (${existe[0].estado}). No se crea nada.`);
+    return;
+  }
 
   const idioma = (await buscar('idiomas', { codigo: 'es' }, 'id'))[0];
   const anios = await buscar('anios', { nombre: '1er grado' }, 'id,nivel_id');
