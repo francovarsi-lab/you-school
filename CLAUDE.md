@@ -61,3 +61,10 @@ Estado y pendientes:
 - Página `/creditos` con enlace al pie de todas las páginas (en el layout). El mail de contacto sale de `NEXT_PUBLIC_CONTACT_EMAIL`; si no existe, la sección se oculta.
 - Pendiente: el diseño de /estudiar al llegar a un tema lo revisa el usuario.
 - Directus solo corre mientras la PC y Docker estén encendidos. Las lecciones públicas no dependen de Directus: se leen de Supabase.
+
+Decisiones de lecciones propias (formato en `docs/bloques.md`):
+- Contenido propio con licencia CC BY-NC-SA 4.0. Fuente "YOU SCHOOL".
+- Primero 1er grado de Primaria. Inicial queda en la estructura, pero vacío.
+- Voz gratuita del navegador (SpeechSynthesis, es-AR). El texto siempre queda visible como respaldo.
+- Ilustraciones por clave: emojis ahora, SVG propios después (plan en `docs/estilo-visual.md`).
+- Sin rachas, puntos ni vidas. Sí devolución inmediata en los ejercicios.
