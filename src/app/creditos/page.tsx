@@ -1,3 +1,5 @@
+import { ATRIBUCION_AUDIO } from '@/lib/atribucion';
+
 export const metadata = {
   title: 'Créditos',
   description: 'Qué es YOU SCHOOL, de dónde salen los videos y con qué licencia se publican.',
@@ -40,6 +42,17 @@ export default function CreditosPage() {
           <h2 id="propias" className="text-xl font-semibold">Lecciones propias</h2>
           <p className="text-lg break-words">
             Las lecciones escritas por YOU SCHOOL tienen fuente YOU SCHOOL y se publican bajo licencia Creative Commons Atribución-NoComercial-CompartirIgual 4.0 (CC BY-NC-SA 4.0). Cada lección indica su autor al final.
+          </p>
+        </section>
+
+        <section aria-labelledby="audios" className="space-y-2">
+          <h2 id="audios" className="text-xl font-semibold">Audios</h2>
+          <p className="text-lg break-words">
+            Los audios de las lecciones usan la voz {ATRIBUCION_AUDIO.voz}, {ATRIBUCION_AUDIO.entrenada}. Licencia {ATRIBUCION_AUDIO.licencia}. Origen:{' '}
+            <a href={ATRIBUCION_AUDIO.origen} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center break-all text-blue-900 underline underline-offset-4 hover:text-blue-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 rounded-sm">
+              {ATRIBUCION_AUDIO.origen}
+            </a>
+            .
           </p>
         </section>
 

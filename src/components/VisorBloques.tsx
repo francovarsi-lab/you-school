@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ilustracion } from '@/lib/ilustraciones';
 import { type Bloque, normalizarBloques, rutaFrase, rutaNumero, rutasAudio } from '@/lib/bloques';
+import { ATRIBUCION_AUDIO } from '@/lib/atribucion';
 import { escuchar, estaSilenciado, precargarAudios, setSilenciado, sonidoAcierto, sonidoError } from '@/lib/sonido';
 
 // Un bloque por pantalla. Sin puntos, rachas, vidas ni premios.
@@ -328,7 +329,7 @@ function Pantalla({ bloque, semilla, voz, registrar }: { bloque: Bloque; semilla
   }
 }
 
-function CierreLeccion({ cierre, onAtras }: { cierre: Cierre; onAtras: () => void }) {
+function CierreLeccion({ cierre, onAtras, conAudio }: { cierre: Cierre; onAtras: () => void; conAudio: boolean }) {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">¡Terminaste la lección!</h2>
@@ -347,6 +348,12 @@ function CierreLeccion({ cierre, onAtras }: { cierre: Cierre; onAtras: () => voi
         )}
         {cierre.autor && <p>Autor: {cierre.autor}</p>}
         {cierre.licencia && <p>Licencia: {cierre.licencia}</p>}
+        {conAudio && (
+          <p>
+            Audios: voz {ATRIBUCION_AUDIO.voz}. Licencia {ATRIBUCION_AUDIO.licencia}. Ver{' '}
+            <Link href="/creditos#audios" className="inline-flex min-h-11 items-center text-blue-800 underline">créditos</Link>.
+          </p>
+        )}
       </div>
       <div className="grid gap-3">
         {cierre.siguiente && (
@@ -419,6 +426,7 @@ export default function VisorBloques({ bloques: crudos, semilla, cierre, alRespo
   }
 
   const bloque = bloques[Math.min(paso, n - 1)];
+  const conAudio = rutasAudio(bloques).length > 0;
 
   const alternarSonido = () => {
     const nuevo = !silencio;
@@ -454,7 +462,7 @@ export default function VisorBloques({ bloques: crudos, semilla, cierre, alRespo
       )}
       {enCierre && (
         <div ref={contenido} tabIndex={-1} className="focus-visible:outline-none">
-          <CierreLeccion cierre={cierre} onAtras={() => setPaso(n - 1)} />
+          <CierreLeccion cierre={cierre} onAtras={() => setPaso(n - 1)} conAudio={conAudio} />
         </div>
       )}
 

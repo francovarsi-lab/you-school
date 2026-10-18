@@ -111,6 +111,13 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 - **Silenciar:** el botón "Silenciar sonidos" (visible arriba de cada pantalla) apaga todos los sonidos y los audios. Vuelve a activarse con "Activar sonidos".
 - Cada toque de un objeto o de un número dice el número. En "ejercicio_ordenar", un acierto dice el número y un error suena el tono de error.
 
+## Licencia de los audios
+
+- Los audios de `public/audio/` están bajo **CC BY-SA 4.0**. Son la voz `daniela` (es_AR) del proyecto Piper (rhasspy), entrenada por larcanio a partir del dataset OpenSLR 61. Origen: https://huggingface.co/rhasspy/piper-voices/tree/main/es/es_AR/daniela/high
+- La atribución sale de `src/lib/atribucion.ts`: en `/creditos` (sección Audios) y en el cierre de cada lección con audio.
+- Las lecciones propias siguen en CC BY-NC-SA 4.0. Cada audio conserva su propia licencia.
+- Los audios se recortan de silencio al principio y al final (quedan 0,05 s de margen). Si se regeneran, repetir el recorte.
+
 ## Campos de la lección
 
 | Campo | Tipo | Obligatorio | Por defecto | Qué es |
