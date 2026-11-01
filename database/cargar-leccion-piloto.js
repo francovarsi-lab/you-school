@@ -32,18 +32,17 @@ async function buscar(coleccion, filtros, fields = 'id,nombre') {
   return api('GET', `/items/${coleccion}?${qs(filtros)}&limit=-1&fields=${fields}`);
 }
 
-const SLUG = 'contamos-del-1-al-10';
+const SLUG = 'sumamos-hasta-10';
 const FUENTE = { nombre: 'YOU SCHOOL', tipo: 'propia', url: 'https://you-school.vercel.app', licencia: 'CC BY-NC-SA 4.0' };
 const AUTOR = 'YOU SCHOOL (borrador escrito con IA, pendiente de revisión docente)';
 const BLOQUES = [
-  { tipo: 'numero', valor: 1, objeto: 'manzana' },
-  { tipo: 'numero', valor: 2, objeto: 'manzana' },
-  { tipo: 'numero', valor: 3, objeto: 'manzana' },
-  { tipo: 'ejercicio_contar', pregunta: 'Tocá cada estrella para contarla.', objeto: 'estrella', cantidad: 5 },
-  { tipo: 'ejercicio_opciones', pregunta: '¿Qué número viene después del 6?', opciones: ['5', '7', '8'], correcta: 1, explicacion: 'Después del 6 viene el 7. Contamos: cinco, seis, siete.', audio: 'frase-despues-del-6' },
-  { tipo: 'ejercicio_ordenar', consigna: 'Tocá los números de menor a mayor.', elementos: ['1', '2', '3', '4', '5'] },
-  { tipo: 'ejercicio_contar', pregunta: 'Tocá cada pelota para contarla.', objeto: 'pelota', cantidad: 8 },
-  { tipo: 'ejercicio_opciones', pregunta: '¿Hasta qué número contamos hoy?', opciones: ['5', '10', '20'], correcta: 1, explicacion: 'Hoy contamos del 1 al 10.', audio: 'frase-hoy-contamos-del-1-al-10' },
+  { tipo: 'texto', contenido: 'Sumar es juntar. Hoy vamos a armar el 10.' },
+  { tipo: 'ejercicio_completar_suma', n: 7 },
+  { tipo: 'ejercicio_completar_suma', n: 4 },
+  { tipo: 'ejercicio_completar_suma', n: 9 },
+  { tipo: 'ejercicio_completar_suma', n: 6 },
+  { tipo: 'ejercicio_armar_diez', consigna: 'Encontrá 5 maneras distintas de formar 10.', meta: 5 },
+  { tipo: 'texto', contenido: '¡Muy bien! Ya sabés qué le falta a cada número para llegar a 10.' },
 ];
 
 async function main() {
@@ -79,9 +78,9 @@ async function main() {
   if (!fuente) plan.push(`crear fuente "${FUENTE.nombre}" (${FUENTE.licencia})`);
   let unidad = (await buscar('unidades', { nombre: 'Números y conteo', materia_id: materiaId }, 'id'))[0];
   if (!unidad) plan.push('crear unidad "Números y conteo"');
-  let tema = unidad ? (await buscar('temas', { nombre: 'Contar hasta 10', unidad_id: unidad.id }, 'id'))[0] : null;
+  let tema = unidad ? (await buscar('temas', { nombre: 'Sumas hasta 10', unidad_id: unidad.id }, 'id'))[0] : null;
   if (!tema) plan.push('crear tema "Contar hasta 10"');
-  let conocimiento = (await buscar('conocimientos', { nombre: 'Contar hasta 10' }, 'id'))[0];
+  let conocimiento = (await buscar('conocimientos', { nombre: 'Sumas hasta 10' }, 'id'))[0];
   if (!conocimiento) plan.push('crear conocimiento "Contar hasta 10"');
   plan.push(`crear lección "Contamos del 1 al 10" (slug ${SLUG}, borrador, tipo bloques, ${BLOQUES.length} bloques)`);
   plan.push('asociar al conocimiento y ubicar en el tema, en 1er grado > Matemática');
@@ -92,12 +91,12 @@ async function main() {
 
   if (!fuente) fuente = await api('POST', '/items/fuentes', FUENTE);
   if (!unidad) unidad = await api('POST', '/items/unidades', { nombre: 'Números y conteo', materia_id: materiaId, orden: 1 });
-  if (!tema) tema = await api('POST', '/items/temas', { nombre: 'Contar hasta 10', unidad_id: unidad.id, orden: 1 });
-  if (!conocimiento) conocimiento = await api('POST', '/items/conocimientos', { nombre: 'Contar hasta 10' });
+  if (!tema) tema = await api('POST', '/items/temas', { nombre: 'Sumas hasta 10', unidad_id: unidad.id, orden: 1 });
+  if (!conocimiento) conocimiento = await api('POST', '/items/conocimientos', { nombre: 'Sumas hasta 10' });
 
   const leccion = await api('POST', '/items/lecciones', {
-    titulo: 'Contamos del 1 al 10',
-    descripcion: 'Aprendemos a contar objetos y a ordenar los números del 1 al 10.',
+    titulo: 'Sumamos hasta 10',
+    descripcion: 'Aprendemos qué número falta para llegar a 10 y armamos el 10 de varias maneras.',
     slug: SLUG,
     idioma_id: idioma.id,
     estado: 'borrador',

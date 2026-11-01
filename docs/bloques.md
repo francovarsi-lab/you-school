@@ -103,6 +103,30 @@ Una lección propia es una lista ordenada de bloques. Cada bloque es un objeto c
 - Un bloque con datos incompletos o desconocidos no rompe la lección: se muestra un aviso en su lugar.
 - Todavía no se guarda progreso. El visor tiene un único punto para enchufarlo después (`alResponder` en `src/components/VisorBloques.tsx`).
 
+### ejercicio_completar_suma
+
+```json
+{ "tipo": "ejercicio_completar_suma", "n": 7 }
+```
+
+- Marco de 10 casilleros (2 filas de 5). Hay `n` fichas naranjas (círculos). Se muestra "7 + ? = 10" y tres opciones grandes: la correcta y dos cercanas.
+- Acierto: los vacíos se llenan con fichas azules (cuadrados redondeados) y dice "¡Bien! 7 + 3 = 10".
+- Error: se dibuja igual la respuesta elegida. La cuenta sale en rojo con el resultado real ("7 + 5 = 12"). Si pasa del 10, las que sobran quedan fuera del marco, en rojo, con "Sobran 2:". Si no llega, dice "Todavía faltan 1". La opción elegida queda en rojo.
+- El mensaje de ánimo rota ("Bueno, seguí intentando", "Mirá el dibujo y probá con otro número", "Dale, probá de nuevo"). Se puede reintentar sin límite.
+- `n` va de 1 a 9. El piloto usa 7, 4, 9 y 6.
+
+### ejercicio_armar_diez
+
+```json
+{ "tipo": "ejercicio_armar_diez", "consigna": "Encontrá 5 maneras distintas de formar 10.", "meta": 5 }
+```
+
+- 10 casilleros que empiezan naranjas. Cada toque alterna naranja y azul. La cuenta "naranjas + azules = 10" se actualiza sola.
+- Cada manera encontrada aparece como etiqueta ("7 + 3"). Cuenta una vez, sin importar el orden: "7 + 3" y "3 + 7" son la misma manera. Solo cuentan las que tienen naranjas y azules a la vez.
+- Al llegar a `meta` (opcional, por defecto 5) dice "¡Lo lograste! Y todavía hay más maneras."
+
+Los dos bloques: el color nunca es lo único (círculo contra cuadrado, y siempre hay texto). Botones de 56 px como mínimo. Funcionan con teclado y lector de pantalla. Sin movimiento si el sistema pide reducir animaciones. Tienen versión clara y oscura.
+
 ## Audio y sonidos
 
 - **Archivos pregrabados** en `public/audio/`, con nombre por clave: `numero-0.mp3` a `numero-20.mp3` (los nombres de los números), y las frases con su clave (`frase-....mp3`). Se generan una sola vez en local con `database/generar-audio.py` (Piper, voz es_AR).

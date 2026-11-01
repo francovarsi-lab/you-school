@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ilustracion } from '@/lib/ilustraciones';
+import { ArmarDiez, CompletarSuma } from '@/components/EjerciciosSuma';
 import { type Bloque, normalizarBloques, rutaFrase, rutaNumero, rutasAudio } from '@/lib/bloques';
 import { ATRIBUCION_AUDIO } from '@/lib/atribucion';
-import { escuchar, estaSilenciado, precargarAudios, setSilenciado, sonidoAcierto, sonidoError } from '@/lib/sonido';
+import { AUDIO_ACTIVO, escuchar, estaSilenciado, precargarAudios, setSilenciado, sonidoAcierto, sonidoError } from '@/lib/sonido';
 
 // Un bloque por pantalla. Sin puntos, rachas, vidas ni premios.
 // Ningún avance se bloquea por fallar: "Siguiente" siempre está disponible.
@@ -38,7 +39,7 @@ const BOTON_OPCION = `${BOTON} w-full justify-start text-left border-gray-600 bg
 // Botón "Escuchar": usa el archivo pregrabado si la pantalla tiene uno; si no, la voz del navegador.
 // Sin archivo y sin voz en español, el botón no aparece.
 function BotonEscuchar({ texto, archivo, voz }: { texto: string; archivo?: string; voz: Voz }) {
-  if (!archivo && !voz) return null;
+  if (!AUDIO_ACTIVO || (!archivo && !voz)) return null;
   return (
     <button type="button" onClick={() => escuchar(archivo ? rutaFrase(archivo) : undefined, texto, voz)} className={BOTON_SECUNDARIO}>
       Escuchar
@@ -324,6 +325,10 @@ function Pantalla({ bloque, semilla, voz, registrar }: { bloque: Bloque; semilla
       return <Contar b={bloque} voz={voz} registrar={registrar} />;
     case 'ejercicio_ordenar':
       return <Ordenar b={bloque} semilla={semilla} voz={voz} registrar={registrar} />;
+    case 'ejercicio_completar_suma':
+      return <CompletarSuma n={bloque.n} registrar={registrar} />;
+    case 'ejercicio_armar_diez':
+      return <ArmarDiez consigna={bloque.consigna} meta={bloque.meta} registrar={registrar} />;
     default:
       return <p className="text-xl text-gray-900">Este bloque no se puede mostrar en este momento.</p>;
   }
@@ -381,7 +386,7 @@ export default function VisorBloques({ bloques: crudos, semilla, cierre, alRespo
 
   // Voz en español del navegador. Se consulta al abrir, para que no haya demora al primer "Escuchar".
   useEffect(() => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    if (!AUDIO_ACTIVO || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     const ss = window.speechSynthesis;
     const buscar = () => {
       const voces = ss.getVoices();
@@ -426,7 +431,7 @@ export default function VisorBloques({ bloques: crudos, semilla, cierre, alRespo
   }
 
   const bloque = bloques[Math.min(paso, n - 1)];
-  const conAudio = rutasAudio(bloques).length > 0;
+  const conAudio = AUDIO_ACTIVO && rutasAudio(bloques).length > 0;
 
   const alternarSonido = () => {
     const nuevo = !silencio;
@@ -445,9 +450,11 @@ export default function VisorBloques({ bloques: crudos, semilla, cierre, alRespo
         ) : (
           <span />
         )}
-        <button type="button" onClick={alternarSonido} aria-pressed={silencio} className={BOTON_SECUNDARIO}>
-          {silencio ? 'Activar sonidos' : 'Silenciar sonidos'}
-        </button>
+        {AUDIO_ACTIVO && (
+          <button type="button" onClick={alternarSonido} aria-pressed={silencio} className={BOTON_SECUNDARIO}>
+            {silencio ? 'Activar sonidos' : 'Silenciar sonidos'}
+          </button>
+        )}
       </div>
 
       {!enCierre && (

@@ -71,8 +71,12 @@ Decisiones de lecciones propias (formato en `docs/bloques.md`):
 - Ilustraciones por clave: emojis ahora, SVG propios después (plan en `docs/estilo-visual.md`).
 - Sin rachas, puntos ni vidas. Sí devolución inmediata en los ejercicios.
 - Visor de bloques (`src/components/VisorBloques.tsx`, formato de bloques en `src/lib/bloques.ts`): solo para lecciones con `tipo_de_contenido = bloques`. Una pantalla por bloque. Sin progreso guardado todavía: el único punto para enchufarlo es `alResponder`.
-- Lección piloto: "Contamos del 1 al 10" (1er grado > Matemática), borrador, con autor "YOU SCHOOL (borrador escrito con IA, pendiente de revisión docente)". Se carga con `database/cargar-leccion-piloto.js` (idempotente). Se ve en `/preview/leccion/<id>` con Directus encendido, no en la web pública hasta que se publique.
+- Lección piloto: "Sumamos hasta 10" (1er grado > Matemática, tema y conocimiento "Sumas hasta 10"), borrador, con 4 rondas de completar suma y un armar el 10. Antes se llamaba "Contamos del 1 al 10" (era de Inicial). Se ve en `/preview/leccion/<id>` con Directus encendido. Id: dc3db0b9-fc7a-4d50-a006-7397f50fb1cd.
 - Fuente "YOU SCHOOL" con licencia "CC BY-NC-SA 4.0" (tipo propia). Las lecciones propias muestran fuente, autor y licencia en el cierre y en `/creditos`.
 - Audio del visor: archivos pregrabados en `public/audio/` (voz Piper es_AR "daniela", generada en local con `database/generar-audio.py`). La voz del navegador queda de respaldo; sonidos de acierto y error con Web Audio; botón "Silenciar sonidos" visible.
-- Audios de `public/audio/`: licencia CC BY-SA 4.0 (la de la voz Piper "daniela", entrenada por larcanio con OpenSLR 61). Atribución en `/creditos` (sección Audios) y en el cierre de las lecciones con audio, desde `src/lib/atribucion.ts`. Cada audio conserva su licencia; la lección sigue siendo CC BY-NC-SA 4.0.
-- Bloques interactivos únicamente en la lección piloto (sin pantallas que solo se miran): `numero`, `imagen` interactiva, `ejercicio_contar`, `ejercicio_opciones`, `ejercicio_ordenar`.
+- Audio APAGADO por decisión del equipo: interruptor `AUDIO_ACTIVO = false` en `src/lib/sonido.ts`. Voz, precarga, efectos y la sección de audios de /creditos quedan sin usar. Los mp3 de `public/audio/` siguen ahí, sin borrar. Para volver a encenderlo: poner `true` (y revisar la atribución en `src/lib/atribucion.ts`).
+- Bloques de la lección piloto: `texto`, `ejercicio_completar_suma` y `ejercicio_armar_diez`. Ver `docs/bloques.md`.
+
+## Respuestas en criollo
+
+Toda respuesta puede llevar el detalle técnico que haga falta, pero SIEMPRE cierra con una sección "En criollo" para una persona que no programa: qué cambió en lo que se ve o se usa (ej. "achiqué un poco el botón", nunca "modifiqué 0,51 px²"), qué tiene que probar y con qué pasos exactos en Windows, qué no se pudo verificar y qué decisión le toca. Sin dejar nada afuera, pero corta (3 a 8 líneas). Ahorrar tokens: no releer archivos ya leídos, no repetir contexto ni salidas largas, no explicar dos veces lo mismo.

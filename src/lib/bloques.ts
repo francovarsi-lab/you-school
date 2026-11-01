@@ -10,6 +10,8 @@ export type Bloque =
   | { tipo: 'ejercicio_opciones'; pregunta: string; opciones: string[]; correcta: number; explicacion: string; audio?: string }
   | { tipo: 'ejercicio_contar'; pregunta: string; objeto: string; cantidad: number }
   | { tipo: 'ejercicio_ordenar'; consigna: string; elementos: string[] }
+  | { tipo: 'ejercicio_completar_suma'; n: number }
+  | { tipo: 'ejercicio_armar_diez'; consigna: string; meta: number }
   | { tipo: 'invalido' };
 
 const texto = (x: unknown): x is string => typeof x === 'string' && x.trim().length > 0;
@@ -52,6 +54,10 @@ export function normalizarBloque(raw: unknown): Bloque {
       return texto(b.consigna) && textos(b.elementos)
         ? { tipo: 'ejercicio_ordenar', consigna: b.consigna, elementos: b.elementos }
         : { tipo: 'invalido' };
+    case 'ejercicio_completar_suma':
+      return entero(b.n, 1, 9) ? { tipo: 'ejercicio_completar_suma', n: b.n } : { tipo: 'invalido' };
+    case 'ejercicio_armar_diez':
+      return texto(b.consigna) ? { tipo: 'ejercicio_armar_diez', consigna: b.consigna, meta: entero(b.meta, 1, 9) ? b.meta : 5 } : { tipo: 'invalido' };
     default:
       return { tipo: 'invalido' };
   }

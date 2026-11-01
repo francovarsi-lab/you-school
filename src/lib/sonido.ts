@@ -4,6 +4,9 @@
 // - Sonidos de acierto y error con Web Audio (sin archivos).
 // Todo se puede silenciar. Si un archivo falta, se usa la voz; si tampoco hay voz, no pasa nada.
 
+// Interruptor general del audio (voz, archivos y efectos). Apagado por decisión del equipo: el código queda, sin usarse.
+export const AUDIO_ACTIVO = false;
+
 let silenciado = false;
 
 export function estaSilenciado() {
@@ -32,7 +35,7 @@ function audioDe(ruta: string): HTMLAudioElement {
 
 // Carga por adelantado los archivos de la lección, para que suenen sin demora.
 export function precargarAudios(rutas: string[]) {
-  if (typeof window === 'undefined') return;
+  if (!AUDIO_ACTIVO || typeof window === 'undefined') return;
   for (const r of rutas) if (!faltan.has(r)) audioDe(r);
 }
 
@@ -47,7 +50,7 @@ export function detener() {
 }
 
 export function hablar(texto: string, voz: SpeechSynthesisVoice) {
-  if (silenciado || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+  if (!AUDIO_ACTIVO || silenciado || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
   const ss = window.speechSynthesis;
   ss.cancel();
   const u = new SpeechSynthesisUtterance(texto);
@@ -58,7 +61,7 @@ export function hablar(texto: string, voz: SpeechSynthesisVoice) {
 
 // Suena el archivo pregrabado si existe; si no, habla con la voz del navegador.
 export async function escuchar(ruta: string | undefined, texto: string, voz: SpeechSynthesisVoice | null) {
-  if (silenciado) return;
+  if (!AUDIO_ACTIVO || silenciado) return;
   if (ruta && !faltan.has(ruta)) {
     const a = audioDe(ruta);
     detener();
@@ -89,7 +92,7 @@ function contexto(): AudioContext | null {
 
 // Tonos cortos y suaves, uno detrás del otro.
 function tonos(frecuencias: number[], duracion: number, forma: OscillatorType) {
-  const c = contexto();
+  const c = AUDIO_ACTIVO ? contexto() : null;
   if (!c || silenciado) return;
   if (c.state === 'suspended') void c.resume();
   frecuencias.forEach((f, i) => {

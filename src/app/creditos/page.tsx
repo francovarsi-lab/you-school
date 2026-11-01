@@ -1,4 +1,5 @@
 import { ATRIBUCION_AUDIO } from '@/lib/atribucion';
+import { AUDIO_ACTIVO } from '@/lib/sonido';
 
 export const metadata = {
   title: 'Créditos',
@@ -45,6 +46,7 @@ export default function CreditosPage() {
           </p>
         </section>
 
+        {AUDIO_ACTIVO && (
         <section aria-labelledby="audios" className="space-y-2">
           <h2 id="audios" className="text-xl font-semibold">Audios</h2>
           <p className="text-lg break-words">
@@ -55,6 +57,7 @@ export default function CreditosPage() {
             .
           </p>
         </section>
+        )}
 
         {contacto && (
           <section aria-labelledby="correcciones" className="space-y-2">
